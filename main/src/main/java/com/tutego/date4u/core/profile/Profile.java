@@ -145,10 +145,14 @@ public class Profile {
     return this;
   }
   
-  public Profile deletePhoto( @NotNull Photo photo){
-    //if(!photo.isProfilePhoto())
-      photos.remove(photo);
-    
+  public Profile deletePhoto( ){
+    List<Photo> allPhotos = this.getPhotos();
+    allPhotos.sort((p1, p2) -> {
+      return  (p1.getCreated().isBefore(p2.getCreated()))? 1: -1;
+    });
+    if(!allPhotos.get(0).isProfilePhoto())
+      photos.remove(allPhotos.get(0));
+    // throw something?
     return this;
   }
 

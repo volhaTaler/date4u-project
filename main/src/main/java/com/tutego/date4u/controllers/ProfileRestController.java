@@ -55,15 +55,10 @@ public class ProfileRestController {
             return new ResponseEntity( HttpStatus.NOT_FOUND );
         
         Profile profile = maybeProfile.get();
-        List<Photo> allPhotos = profile.getPhotos();
-        allPhotos.sort((p1, p2) -> {
-            return  (p1.getCreated().isBefore(p2.getCreated()))? 1: -1;
-           });
-        if(allPhotos.get(0).isProfilePhoto()){
-            return new ResponseEntity("The photo is a profile one. Cannot be deleted", HttpStatus.FORBIDDEN);
-        }
-        // delete photoes which were added earlier
-        profile.deletePhoto(allPhotos.get(0));
+//        if(allPhotos.get(0).isProfilePhoto()){
+//            return new ResponseEntity("The photo is a profile one. Cannot be deleted", HttpStatus.FORBIDDEN);
+//        }
+        profile.deletePhoto();
         profiles.save( profile );
         return ResponseEntity.ok().build();
     }
