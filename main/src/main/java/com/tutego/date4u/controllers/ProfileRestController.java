@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +45,27 @@ public class ProfileRestController {
         profile.add( photo );
         profiles.save( profile );
         return ResponseEntity.created( URI.create( "/api/photos/" + imageName ) ).build();
+    }
+    
+    @DeleteMapping ( "{id}/photos/" )
+    public ResponseEntity<?> deleteImage( @PathVariable long id,
+                                        @RequestParam int number ) {
+        Optional<Profile> maybeProfile = profiles.findById( id );
+        if ( maybeProfile.isEmpty() )
+            return new ResponseEntity( HttpStatus.NOT_FOUND );
+        
+        Profile profile = maybeProfile.get();
+        List<Photo> allPhotos = profile.getPhotos();
+        allPhotos.sort((p1, p2) -> {
+            return  (p1.getCreated().isBefore(p2.getCreated()))? 1: -1;
+           });
+        if(allPhotos.get(0).isProfilePhoto()){
+            return new ResponseEntity("The photo is a profile one. Cannot be deleted", HttpStatus.FORBIDDEN);
+        }
+        // delete photoes which were added earlier
+        profile.deletePhoto(allPhotos.get(0));
+        profiles.save( profile );
+        return ResponseEntity.ok().build();
     }
 }
 

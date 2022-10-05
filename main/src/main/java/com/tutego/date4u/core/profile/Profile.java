@@ -1,6 +1,7 @@
 package com.tutego.date4u.core.profile;
 
 import com.tutego.date4u.core.photo.Photo;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
 
 import jakarta.persistence.*;
@@ -141,6 +142,13 @@ public class Profile {
 
   public Profile add( Photo photo ) {
     photos.add( photo );
+    return this;
+  }
+  
+  public Profile deletePhoto( @NotNull Photo photo){
+    //if(!photo.isProfilePhoto())
+      photos.remove(photo);
+    
     return this;
   }
 
