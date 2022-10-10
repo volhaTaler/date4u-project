@@ -15,7 +15,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
   FROM profile
   GROUP BY YEAR(lastseen), MONTH(lastseen)""" )
     List<Tuple> findMonthlyProfileCount();
-    Optional<Profile> findByNickname(String nickname);
+   
     
   
 }
