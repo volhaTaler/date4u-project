@@ -8,29 +8,40 @@
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
         <div class="container-fluid"><div class="navbar-nav">
             <a class="navbar-brand" href="#">Date4u</a>
-            <a class="nav-item nav-link" href="index">Home</a>
+            <a class="nav-item nav-link" href="home">Home</a>
             <a class="nav-link nav-item" href="profile">Profile</a>
             <a class="nav-link nav-item" href="search">Search</a>
         </div></div>
     </nav>
     <div class="jumbotron">
-        <h1 class="display-4">Who is today here: </h1>
+        <h1 class="display-4">Find Your Destiny: </h1>
         <div>
             <table class="table">
                 <thead>
-                <tr><th>#</th><th>ID</th><th>Nickname</th><th>Description</th></tr>
+                <tr><th>#</th><th>Birthday</th><th>Nickname</th><th>Description</th></tr>
                 </thead>
                 <tbody>
-                <tr data-th-each="profile,it : ${profiles}">
-                    <td data-th-text="${it.count}">COUNTER</td>
-                     <td data-th-text="${profile.id}">ID</td>
+                <tr data-th-each="profile,it : ${pageOfProfiles}">
+                    <td data-th-text="${it.count} +(${pageOfProfiles.size()}* (${currentPage}-1))">COUNTER</td>
                     <td data-th-text="${profile.nickname}">NICKNAME</td>
+                    <td data-th-text="${profile.birthdate}">BIRTHDAY</td>
                     <td data-th-text="${profile.description}">DESCRIPTION</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <footer style="font-size: large" class="panel-footer">
+        Found [[${totalProfilesNumber}]] Profiles : Page [[${currentPage}]] of [[${pageOfProfiles.size()-1}]]
+        &nbsp; &nbsp; --> &nbsp;
+        <span th:each="i: ${pageNumbers}">
+        <a th:href="@{/search(size=${5}, page=${i})}">[[${i}]]</a>
+        &nbsp; &nbsp;
+    </span>
+    </footer>
+    <p>
+<!--        <a href="../index.html" th:href="@{/}">Return to home</a>-->
+    </p>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 </body>

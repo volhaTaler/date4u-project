@@ -1,4 +1,4 @@
-package com.tutego.date4u.controllers;
+package com.tutego.date4u.controller;
 
 import com.tutego.date4u.core.statistics.LastSeenStatistics;
 import com.tutego.date4u.core.profile.ProfileRepository;

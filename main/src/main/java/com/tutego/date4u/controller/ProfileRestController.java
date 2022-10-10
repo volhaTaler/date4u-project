@@ -1,6 +1,7 @@
-package com.tutego.date4u.controllers;
+package com.tutego.date4u.controller;
 
 import com.tutego.date4u.core.photo.Photo;
+import com.tutego.date4u.core.photo.PhotoRepository;
 import com.tutego.date4u.core.photo.PhotoService;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
@@ -13,21 +14,24 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping( "/api/profiles/"
+@RequestMapping( "/profiles/"
 )
 public class ProfileRestController {
     
     @Autowired
     final ProfileRepository profiles;
+    
+    @Autowired
+    final PhotoRepository photoRepository;
     final PhotoService photos;
     
-    public ProfileRestController( ProfileRepository profiles, PhotoService photos ) {
+    public ProfileRestController(ProfileRepository profiles, PhotoRepository photoRepository, PhotoService photos ) {
         this.profiles = profiles;
+        this.photoRepository = photoRepository;
         this.photos = photos;
     }
     
@@ -44,7 +48,7 @@ public class ProfileRestController {
                 LocalDateTime.now().truncatedTo( TimeUnit.SECONDS.toChronoUnit() ) );
         profile.add( photo );
         profiles.save( profile );
-        return ResponseEntity.created( URI.create( "/api/photos/" + imageName ) ).build();
+        return ResponseEntity.created( URI.create( "/profile/photos/" + imageName ) ).build();
     }
     
     @DeleteMapping ( "{id}/photos/" )
@@ -59,6 +63,7 @@ public class ProfileRestController {
 //            return new ResponseEntity("The photo is a profile one. Cannot be deleted", HttpStatus.FORBIDDEN);
 //        }
         profile.deletePhoto();
+        //photoRepository.delete();
         profiles.save( profile );
         return ResponseEntity.ok().build();
     }

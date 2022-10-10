@@ -1,4 +1,4 @@
-package com.tutego.date4u.controllers;
+package com.tutego.date4u.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

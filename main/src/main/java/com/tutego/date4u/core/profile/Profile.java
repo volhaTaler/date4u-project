@@ -1,7 +1,9 @@
 package com.tutego.date4u.core.profile;
 
 import com.tutego.date4u.core.photo.Photo;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.lang.Nullable;
 
 import jakarta.persistence.*;
@@ -12,13 +14,17 @@ import java.util.*;
 @Entity
 @Access( AccessType.FIELD )
 public class Profile {
-
+  
+  public static final int DIV = 0;
   public static final int FEE = 1;
   public static final int MAA = 2;
+  
 
   @Id @GeneratedValue( strategy = GenerationType.IDENTITY )
   private Long id;
-
+  
+  @NotEmpty(message="User's name cannot be empty")
+  @Size(min = 5, max = 250)
   private String nickname;
   private LocalDate birthdate;
   private short hornlength;
@@ -72,6 +78,7 @@ public class Profile {
     return id;
   }
 
+ 
   public String getNickname() {
     return nickname;
   }
@@ -146,12 +153,9 @@ public class Profile {
   }
   
   public Profile deletePhoto( ){
-    List<Photo> allPhotos = this.getPhotos();
-    allPhotos.sort((p1, p2) -> {
-      return  (p1.getCreated().isBefore(p2.getCreated()))? 1: -1;
-    });
-    if(!allPhotos.get(0).isProfilePhoto())
-      photos.remove(allPhotos.get(0));
+    photos.sort((p1, p2) -> (p1.getCreated().isBefore(p2.getCreated()))? 1: -1);
+    if(!photos.get(0).isProfilePhoto())
+      photos.remove(0);
     // throw something?
     return this;
   }
