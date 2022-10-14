@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.0/dist/quartz/bootstrap.min.css">
 </head>
@@ -9,10 +9,11 @@
         <div class="container-fluid"><div class="navbar-nav">
             <a class="navbar-brand" href="#">Date4u</a>
             <a class="nav-link nav-item" href="profile">My Profile</a>
-            <a class="nav-link nav-item" href="/logout">Logout</a>
+            <a class="nav-link nav-item" th:href="@{/logout}">Logout</a>
         </div></div>
     </nav>
     <div class="jumbotron">
+        </br>
         <h1 class="display-4">Find Your Destiny </h1>
         </br></br>
         <div>

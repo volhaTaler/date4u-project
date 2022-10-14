@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -107,7 +108,8 @@ public class SecurityConfig {
                 .permitAll().anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login").defaultSuccessUrl( "/profile", true )
                         .permitAll())
-                .logout((logout) -> logout.logoutSuccessUrl( "/" )
+                .logout((logout) -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        //logoutSuccessUrl( "/" )
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID").permitAll());
         return http.build();
