@@ -54,14 +54,14 @@ public class LoginController {
             //      return "redirect:/";
         }
 //        Authentication authentication = context.getAuthentication();
-        String useremail = unicorn.getUsername();
+        //String useremail = unicorn.getUsername();
         Optional<Profile> currentProfile= unicornService.getNicknameByEmail("fillmore.fat@wyman.co");
     
         if(currentProfile.isPresent()){
             model.addAttribute("profile", currentProfile.get());
-            return "redirect:/profile";
+            return "/profile";
         }
-        return "redirect:/index";
+        return "/";
     }
 //    @GetMapping("/login")
 //    public String login(@ModelAttribute("password") String password,

@@ -81,6 +81,19 @@ public class Date4uWebController {
        return "redirect:/home";
     }
     
+    @RequestMapping( "/profile" )
+    public String profilePage( Model model) {
+        Optional<Profile> currentProfile= unicornService.getNicknameByEmail("fillmore.fat@wyman.co");
+        if(currentProfile.isEmpty()){
+            return "redirect:/";
+        }
+        
+        Profile temp = currentProfile.get();
+        model.addAttribute("profile", ProfileFormData.createPFD(temp));
+        
+        return "profile";
+    }
+    
     @RequestMapping( "/profile/{id}" )
     public String profilePage(@PathVariable("id") long id,  Model model) {
         Optional<Profile> profile = profiles.findById(id);

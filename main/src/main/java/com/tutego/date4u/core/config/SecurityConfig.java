@@ -53,16 +53,15 @@ public class SecurityConfig {
                         "/search",
                         "/home",
                         "/profile",
-                        "login",
                         "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login.html").permitAll()
-                //.usernameParameter( "email" )
-                .failureUrl( "/index.html")
+                .formLogin().loginPage("/login").permitAll()
+                .usernameParameter( "email" )
+                .failureUrl( "/")
                 .permitAll()
                 .and()
-                .logout().logoutSuccessUrl( "/index.html" )
+                .logout().logoutSuccessUrl( "/" )
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
                 .permitAll();
