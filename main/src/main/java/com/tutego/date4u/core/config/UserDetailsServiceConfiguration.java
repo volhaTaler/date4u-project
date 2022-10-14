@@ -11,18 +11,21 @@ import java.util.Optional;
 
 @Configuration
 public class UserDetailsServiceConfiguration implements UserDetailsService {
-    @Autowired
-    private UnicornRepository unicornRepository;
+    
+    
+    private final UnicornRepository unicornRepository;
+    
+    public UserDetailsServiceConfiguration(UnicornRepository unicornRepository) {
+        this.unicornRepository = unicornRepository;
+    }
     
     @Override
     public UserDetails loadUserByUsername(String username ) throws UsernameNotFoundException {
         Optional<Unicorn> unicorn = unicornRepository.findUnicornByEmail( username );
-        if( unicorn == null ) {
+        if( unicorn.isEmpty() ) {
             throw new UsernameNotFoundException( "User not found " + username );
         }
-        return new CurrentUser(
-                unicorn.get().getEmail(),
-                unicorn.get().getPassword(),
-                Collections.emptyList() );
+        return new CurrentUser(unicorn.get());
+
     }
 }

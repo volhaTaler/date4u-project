@@ -1,11 +1,14 @@
 package com.tutego.date4u.core.config;
 
+import com.tutego.date4u.core.profile.Unicorn;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class CurrentUser extends User {
+public class CurrentUser extends Unicorn implements UserDetails {
     
   
     public CurrentUser(Unicorn unicorn) {

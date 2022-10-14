@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -24,18 +25,20 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     
     
-    @Autowired
+    //@Autowired
     private UserDetailsServiceConfiguration unicornService;
-    @Bean
+/*    @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceConfiguration();
-    }
+    }*/
 
+    public SecurityConfig(UserDetailsServiceConfiguration unicornService) {
+        this.unicornService = unicornService;
+    }
     
     @Bean
     public PasswordEncoder passwordEncoder() {
-        
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
     
  //   @Bean
@@ -51,12 +54,20 @@ public class SecurityConfig {
                 .userDetailsService(unicornService)
                 .and()
                 .build();
-    }
-    @Bean
+    }*/
+/*    @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService( userDetailsService() );
         return authProvider;
+    }*/
+    
+    @Bean
+    public AuthenticationManager authenticationProvider(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(unicornService)
+                .and()
+                .build();
     }
     
    
@@ -104,7 +115,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return ( web ) -> web.ignoring().antMatchers( "/images/**", "/js/**", "/webjars/**" );
+        return ( web ) -> web.ignoring().antMatchers( "/images/**", "/js/**" );
     }
     
 }
