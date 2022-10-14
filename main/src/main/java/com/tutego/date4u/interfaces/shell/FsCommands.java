@@ -1,7 +1,7 @@
 package com.tutego.date4u.interfaces.shell;
 
 import com.tutego.date4u.core.FileSystem;
-import com.tutego.date4u.core.configuration.Date4uProperties;
+import com.tutego.date4u.core.config.Date4uProperties;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.env.Environment;
 import org.springframework.shell.standard.ShellComponent;

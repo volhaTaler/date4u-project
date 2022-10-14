@@ -1,5 +1,6 @@
 package com.tutego.date4u.service;
 
+import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.Unicorn;
 import com.tutego.date4u.core.profile.UnicornRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,10 @@ public class UnicornService {
         }
         return Optional.empty();
         
+    }
+    public Optional<Profile> getNicknameByEmail(String email){
+    
+        Optional<Unicorn> unicornByEmail = unicornRepository.findUnicornByEmail(email);
+        return Optional.ofNullable(unicornByEmail.get().getProfile());
     }
 }

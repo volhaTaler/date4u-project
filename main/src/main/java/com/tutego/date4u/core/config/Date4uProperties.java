@@ -1,4 +1,4 @@
-package com.tutego.date4u.core.configuration;
+package com.tutego.date4u.core.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -1,23 +1,25 @@
 package com.tutego.date4u.controller;
 
+import com.tutego.date4u.core.config.CurrentUser;
 import com.tutego.date4u.core.dto.ProfileFormData;
-import com.tutego.date4u.core.dto.UnicornFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
-import com.tutego.date4u.core.profile.Unicorn;
 import com.tutego.date4u.core.profile.UnicornRepository;
 import com.tutego.date4u.service.ProfileService;
 import com.tutego.date4u.service.UnicornService;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,68 +39,46 @@ public class Date4uWebController {
     
     @Autowired
     private final ProfileRepository profiles;
-    @Autowired
-    private final UnicornRepository unicorns;
+    
     @Autowired
     private ProfileService profileService;
     
     @Autowired
     private UnicornService unicornService;
+    
+    
     private final Logger log = LoggerFactory.getLogger( getClass() );
     
     public Date4uWebController(final ProfileRepository profiles, UnicornRepository unicorns) {
         this.profiles = profiles;
-        this.unicorns = unicorns;
     }
     
     @RequestMapping( "/" )
-    public String home() {
+    public String goToIndex() {
         
         return "index";
     }
     
-    @GetMapping("/login")
-        public String login(@ModelAttribute("password") String password,
-                            @ModelAttribute("useremail") String email){
-        Optional<Long> code = unicornService.checkLoginData(email, password);
-        if(code.isPresent()){
-            return "redirect:/profile/" + code.get();
-        }
-            return "login";
-        }
+    @GetMapping( value = "/home")
+    public String home(Model model) {
+//    CurrentUser unicorn = null;
+//        if(auth != null) {
+//            unicorn = (CurrentUser) auth.getPrincipal();
+//            log.info(unicorn.getUsername() + ":  " + unicorn.getPassword());
+//      //      return "redirect:/";
+//        }
+////        Authentication authentication = context.getAuthentication();
+//        String useremail = unicorn.getUsername();
+//        Optional<Profile> currentProfile= unicornService.getNicknameByEmail(useremail);
+//
+//        if(currentProfile.isPresent()){
+//            Profile temp = currentProfile.get();
+//            model.addAttribute("profile", ProfileFormData.createPFD(temp));
+//            return "profile";
+//
+//        }
         
-        @GetMapping("/registration")
-        public String register(Model model){
-            UnicornFormData user = new UnicornFormData();
-            ProfileFormData userProfile = new ProfileFormData();
-        model.addAttribute("user", user);
-        model.addAttribute("userProfile", userProfile);
-        return "/registration";
-        }
-     
-    @PostMapping("/registration/save")
-    public String saveRegistration(@Valid @ModelAttribute("userProfile") ProfileFormData profile,
-                                   @Valid @ModelAttribute("user") UnicornFormData user,
-                                   BindingResult result, Model model){
-
-        if(unicornService.checkEmail(user.getEmail()).isPresent()){
-            result.rejectValue("email", null,
-                    "There is already an account registered with the same email");
-
-        }
-        if(result.hasErrors()){
-            model.addAttribute("user", user);
-            model.addAttribute("userProfile", profile);
-            return "/registration";
-        }
-        // create accounts
-        UnicornFormData userUnicorn = new UnicornFormData(user.getPassword(), user.getEmail());
-        Profile userProfile = profile.generateNewProfile();
-        Profile justCreated = profiles.save(userProfile);
-        Unicorn unicornToCreate = userUnicorn.generateNewUnicorn(justCreated);
-        unicorns.save(unicornToCreate);
-        return "redirect:/profile/" + justCreated.getId();
-        //return "redirect:/registration?success";
+       return "redirect:/home";
     }
     
     @RequestMapping( "/profile/{id}" )
@@ -109,7 +90,7 @@ public class Date4uWebController {
         Profile temp = profile.get();
         model.addAttribute("profile", ProfileFormData.createPFD(temp));
     
-        return "profile"; }
+        return "profile/" + id; }
     
     @RequestMapping( "/search" )
     public String searchPage(Model model, @RequestParam(defaultValue="1") int page,
@@ -120,7 +101,7 @@ public class Date4uWebController {
         model.addAttribute("pageOfProfiles", pagesOfProfiles.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalProfilesNumber", pagesOfProfiles.getNumberOfElements());
-        
+
         int totalPages = pagesOfProfiles.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
