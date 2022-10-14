@@ -2,13 +2,11 @@ package com.tutego.date4u.core.config;
 
 import com.tutego.date4u.core.profile.Unicorn;
 import com.tutego.date4u.core.profile.UnicornRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Configuration

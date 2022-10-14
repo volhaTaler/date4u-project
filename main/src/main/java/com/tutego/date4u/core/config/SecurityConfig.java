@@ -38,13 +38,13 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
-//    @Bean
+ //   @Bean
 //    public AuthenticationManager authenticationManager(
 //            AuthenticationConfiguration authConfig ) throws Exception {
 //        return authConfig.getAuthenticationManager();
 //    }
-//
-    @Bean
+
+/*    @Bean
     public AuthenticationManager authManager(HttpSecurity http)
             throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
@@ -60,66 +60,48 @@ public class SecurityConfig {
     }
     
    
-    @Bean
-    public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
-        http.authorizeRequests().antMatchers(
-                      //  "/profile/*",
-                        "/",
-                        "/img/**",
-                       // "/search",
-                     //   "/home",
-                      //  "/profile",
-                        "/registration").authenticated()
-                .anyRequest().anonymous()
-                .and()
-                .formLogin().loginPage("/login.html")
-                .loginProcessingUrl("/login")
-                .permitAll()
-                .usernameParameter( "email" )
-                .failureUrl( "/")
-                .permitAll()
-                .and()
-                .logout().logoutSuccessUrl( "/" )
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-               // .clearAuthentification(true)
-                .permitAll();
-        http.authenticationProvider( authenticationProvider() );
-        http.headers().frameOptions().sameOrigin();
-        return http.build();
-    }
-    
 //    @Bean
 //    public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
+//        http.authorizeRequests().antMatchers(
+//                        "/registration",
+//                        "/profile/*",
 //
-//        http.authorizeRequests()
-//                .anyRequest()
-//                .authenticated()
+//                        "/img/**",
+//                        "/search",
+//                        "/home",
+//                      //  "/profile",
+//                        "/").authenticated()
+//                .anyRequest().anonymous()
 //                .and()
-//                .formLogin().loginPage("/login").permitAll();
-//        return http.build();
-  //  }
-//        http.authorizeRequests().antMatchers( "/registration" ).authenticated()
-//                .antMatchers( "/search" ).authenticated()
-//                .antMatchers( "/home" ).authenticated()
-//                .antMatchers( "/profile/*" ).authenticated()
-//                .anyRequest().permitAll()
-//                .and()
-//                .formLogin().loginPage("/login")
+//                .formLogin().loginPage("/login.html")
+//               // .loginProcessingUrl("/login")
+//                .permitAll()
 //                .usernameParameter( "email" )
-//                .defaultSuccessUrl( "/home", true )
-//                .failureUrl("/")
+//                .failureUrl( "/")
 //                .permitAll()
 //                .and()
 //                .logout().logoutSuccessUrl( "/" )
 //                .invalidateHttpSession(true)
 //                .deleteCookies("JSESSIONID")
+//               // .clearAuthentification(true)
 //                .permitAll();
 //        http.authenticationProvider( authenticationProvider() );
 //        http.headers().frameOptions().sameOrigin();
 //        return http.build();
 //    }
-//
+    
+    @Bean
+    public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
+        http.authorizeRequests((requests) -> requests.antMatchers("/registration","/")
+                .permitAll().anyRequest().authenticated())
+                .formLogin((form) -> form.loginPage("/login").defaultSuccessUrl( "/profile", true )
+                        .permitAll())
+                .logout((logout) -> logout.logoutSuccessUrl( "/" )
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID").permitAll());
+        return http.build();
+    }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return ( web ) -> web.ignoring().antMatchers( "/images/**", "/js/**", "/webjars/**" );

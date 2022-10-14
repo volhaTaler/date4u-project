@@ -5,58 +5,53 @@
 </head>
 <body>
 <div class="container">
-  <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-    <div class="container-fluid">
-      <div class="navbar-nav">
-        <div class="jumbotron">
-      <a class="navbar-brand" href="#">Date4u</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-          <h2 class="display-4">Welcome to the Date for You</h2>
-<!--        <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
-<!--          <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
-<!--            <li class="nav-item">-->
-<!--              <a class="nav-link active" aria-current="page" th:href="@{/registration}">Register</a>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
-        </div>
-        </div>
-    </div>
-  </nav>
-  <br/><br/>
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-
-<!--      <div th:if="${param.error}">-->
-<!--        <div class="alert alert-danger">Invalid Email or Password</div>-->
-<!--      </div>-->
-<!--      <div th:if="${param.logout}">-->
-<!--        <div class="alert alert-success"> You have been logged out.</div>-->
-<!--      </div>-->
-
-      <div class="card">
-        <div class="card-header">
-          <h2 class="text-center">LogIn</h2>
-        </div>
-        <div class="card-body">
-          <form
-                  method="get"
-                  role="form"
-                  th:action="@{/login}"
-                  class="form-horizontal"
-          >
-            <div class="form-group mb-3">
-              <label class="control-label"> Email</label>
-              <input
-                      type="text"
-                      id="useremail"
-                      name="useremail"
-                      class="form-control"
-                      placeholder="Enter email address"
-              />
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <div class="container-fluid">
+            <div class="navbar-nav">
+                <div class="jumbotron">
+                    <a class="navbar-brand" href="#">Date4u</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <h2 class="display-4">Welcome to the Date for You</h2>
+                </div>
             </div>
+        </div>
+    </nav>
+    <br/><br/>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <div th:if="${param.error}">
+                <div class="alert alert-danger">Invalid Email or Password</div>
+            </div>
+            <div th:if="${param.logout}">
+                <div class="alert alert-success"> You have been logged out.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">LogIn</h2>
+                </div>
+                <div class="card-body">
+                    <form
+                            method="post"
+                            role="form"
+                            th:action="@{/login}"
+                            class="form-horizontal"
+                    >
+                        <div class="form-group mb-3">
+                            <label class="control-label"> Email</label>
+                            <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    class="form-control"
+                                    placeholder="Enter email address"
+                            />
+                        </div>
 
             <div class="form-group mb-3">
               <label class="control-label"> Password</label>

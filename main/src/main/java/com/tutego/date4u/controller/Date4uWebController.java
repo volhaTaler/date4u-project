@@ -60,7 +60,7 @@ public class Date4uWebController {
     }
     
     @GetMapping( value = "/home")
-    public String home(Model model) {
+    public String home() {
 //    CurrentUser unicorn = null;
 //        if(auth != null) {
 //            unicorn = (CurrentUser) auth.getPrincipal();
@@ -77,19 +77,24 @@ public class Date4uWebController {
 //            return "profile";
 //
 //        }
-        
-       return "redirect:/home";
+
+       return "home";
     }
     
     @RequestMapping( "/profile" )
-    public String profilePage( Model model) {
-        Optional<Profile> currentProfile= unicornService.getNicknameByEmail("fillmore.fat@wyman.co");
-        if(currentProfile.isEmpty()){
-            return "redirect:/";
+    public String profilePage( Authentication auth, Model model) {
+        CurrentUser unicorn = null;
+        if(auth != null) {
+            unicorn = (CurrentUser) auth.getPrincipal();
+            log.info(unicorn.getUsername() + ":  " + unicorn.getPassword());
+            Optional<Profile> currentProfile= unicornService.getNicknameByEmail(unicorn.getUsername());
+            Profile temp = currentProfile.get();
+            model.addAttribute("profile", ProfileFormData.createPFD(temp));
+                  return "profile";
         }
-        
-        Profile temp = currentProfile.get();
-        model.addAttribute("profile", ProfileFormData.createPFD(temp));
+        Optional<Profile> currentProfile= unicornService.getNicknameByEmail("example2@gmail.com");
+
+        model.addAttribute("profile", currentProfile.get());
         
         return "profile";
     }

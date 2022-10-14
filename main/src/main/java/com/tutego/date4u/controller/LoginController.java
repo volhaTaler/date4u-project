@@ -45,33 +45,21 @@ public class LoginController {
         this.unicorns = unicorns;
         this.profiles = profiles;
     }
-    @GetMapping("/login")
-    public String login(Authentication auth, Model model){
-        CurrentUser unicorn = null;
-        if(auth != null) {
-            unicorn = (CurrentUser) auth.getPrincipal();
-            log.info(unicorn.getUsername() + ":  " + unicorn.getPassword());
-            //      return "redirect:/";
-        }
-//        Authentication authentication = context.getAuthentication();
-        //String useremail = unicorn.getUsername();
-        Optional<Profile> currentProfile= unicornService.getNicknameByEmail("fillmore.fat@wyman.co");
     
-        if(currentProfile.isPresent()){
-            model.addAttribute("profile", currentProfile.get());
-            return "/profile";
-        }
-        return "/";
+    @GetMapping("/login")
+    public String login(){
+        
+        return "login";
     }
-//    @GetMapping("/login")
-//    public String login(@ModelAttribute("password") String password,
-//                        @ModelAttribute("useremail") String email){
-//        Optional<Long> code = unicornService.checkLoginData(email, password);
-//        if(code.isPresent()){
-//            return "redirect:/profile/" + code.get();
-//        }
-//        return "home";
-//    }
+    
+    @RequestMapping("/logout")
+    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/login?logout";
+    }
     
     @GetMapping("/registration")
     public String register(Model model) {
@@ -79,7 +67,7 @@ public class LoginController {
         ProfileFormData userProfile = new ProfileFormData();
         model.addAttribute("user", user);
         model.addAttribute("userProfile", userProfile);
-        return "/registration";
+        return "registration";
     }
     
     @PostMapping("/registration/save")
