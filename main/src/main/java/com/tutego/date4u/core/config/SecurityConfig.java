@@ -1,7 +1,9 @@
 package com.tutego.date4u.core.config;
 
 
+import com.tutego.date4u.service.UnicornService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +20,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
+    
+    
+    @Autowired
+    private UserDetailsServiceConfiguration unicornService;
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceConfiguration();
@@ -32,10 +38,19 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
+//    @Bean
+//    public AuthenticationManager authenticationManager(
+//            AuthenticationConfiguration authConfig ) throws Exception {
+//        return authConfig.getAuthenticationManager();
+//    }
+//
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authConfig ) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authManager(HttpSecurity http)
+            throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(unicornService)
+                .and()
+                .build();
     }
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -48,47 +63,63 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
         http.authorizeRequests().antMatchers(
-                        "/profile/*", "/",
+                      //  "/profile/*",
+                        "/",
                         "/img/**",
-                        "/search",
-                        "/home",
-                        "/profile",
-                        "/registration").permitAll()
-                .anyRequest().authenticated()
+                       // "/search",
+                     //   "/home",
+                      //  "/profile",
+                        "/registration").authenticated()
+                .anyRequest().anonymous()
                 .and()
-                .formLogin().loginPage("/login").permitAll()
+                .formLogin().loginPage("/login.html")
+                .loginProcessingUrl("/login")
+                .permitAll()
                 .usernameParameter( "email" )
                 .failureUrl( "/")
                 .permitAll()
                 .and()
                 .logout().logoutSuccessUrl( "/" )
-                .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+               // .clearAuthentification(true)
                 .permitAll();
         http.authenticationProvider( authenticationProvider() );
         http.headers().frameOptions().sameOrigin();
         return http.build();
     }
     
-   // @Bean
+//    @Bean
 //    public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
+//
+//        http.authorizeRequests()
+//                .anyRequest()
+//                .authenticated()
+//                .and()
+//                .formLogin().loginPage("/login").permitAll();
+//        return http.build();
+  //  }
 //        http.authorizeRequests().antMatchers( "/registration" ).authenticated()
 //                .antMatchers( "/search" ).authenticated()
 //                .antMatchers( "/home" ).authenticated()
 //                .antMatchers( "/profile/*" ).authenticated()
 //                .anyRequest().permitAll()
 //                .and()
-//                .formLogin()
+//                .formLogin().loginPage("/login")
 //                .usernameParameter( "email" )
 //                .defaultSuccessUrl( "/home", true )
+//                .failureUrl("/")
 //                .permitAll()
 //                .and()
-//                .logout().logoutSuccessUrl( "/" ).permitAll();
+//                .logout().logoutSuccessUrl( "/" )
+//                .invalidateHttpSession(true)
+//                .deleteCookies("JSESSIONID")
+//                .permitAll();
 //        http.authenticationProvider( authenticationProvider() );
 //        http.headers().frameOptions().sameOrigin();
 //        return http.build();
 //    }
-    
+//
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return ( web ) -> web.ignoring().antMatchers( "/images/**", "/js/**", "/webjars/**" );
