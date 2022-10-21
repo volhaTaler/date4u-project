@@ -18,7 +18,7 @@ public class CurrentUser extends Unicorn implements UserDetails {
     @Override
     public String getPassword() {
         
-        return super.getPassword().substring(6);
+        return super.getPassword(); //.substring(6);
     }
     
     @Override

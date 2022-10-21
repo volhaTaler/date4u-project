@@ -51,6 +51,12 @@ public class LoginController {
         this.profiles = profiles;
     }
     
+    @RequestMapping( "/" )
+    public String goToIndex() {
+        
+        return "index";
+    }
+    
     @GetMapping("/login")
     public String login(){
         
@@ -80,7 +86,7 @@ public class LoginController {
                                    @Valid @ModelAttribute("user") UnicornFormData user,
                                    BindingResult result, Model model) {
         
-        if (unicornService.checkEmail(user.getEmail()).isPresent()) {
+        if (unicornService.getByNickname(user.getEmail()).isPresent()) {
             result.rejectValue("email", null,
                     "There is already an account registered with the same email");
             
@@ -96,7 +102,6 @@ public class LoginController {
         Profile justCreated = profiles.save(userProfile);
         Unicorn unicornToCreate = userUnicorn.generateNewUnicorn(justCreated);
         unicorns.save(unicornToCreate);
-        //return "redirect:/profile/" + justCreated.getId();
         return "redirect:/registration?success";
     }
 }
