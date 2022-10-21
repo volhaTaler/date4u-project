@@ -1,6 +1,7 @@
 package com.tutego.date4u.core.photo;
 
 import com.tutego.date4u.core.FileSystem;
+import com.tutego.date4u.core.dto.PhotoFormData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -9,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -53,13 +56,13 @@ public class PhotoService {
     //    publisher.publishEvent( newPhotoEvent );
 
     // First: store original image
-    fs.store( imageName + ".jpg", imageBytes );
+  //  fs.store( imageName + ".jpg", imageBytes );
 
     // Second: store thumbnail
     try {
       log.info( "upload" );
       
-        fs.store(imageName + "-thumb.jpg", thumbnailBytes.get());
+        fs.store(imageName + ".jpg", thumbnailBytes.get());
     }
     catch ( InterruptedException | ExecutionException e ) {
       throw new IllegalStateException( e.getCause() );
@@ -67,4 +70,6 @@ public class PhotoService {
 
     return imageName;
   }
+  
+  
 }
