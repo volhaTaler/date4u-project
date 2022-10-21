@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.0/dist/quartz/bootstrap.min.css" crossorigin="anonymous">
+    <style>
+        .jumbotron, .table, .panel-footer{
+
+            margin-left: 35px;   /* Horizontal Space */
+            margin-top: 35px;  /* Vertical Space */
+
+        }
+        .btn, .d-block{
+
+            margin-top: 10px;  /* Vertical Space */
+            margin-bottom: 15px;  /* Vertical Space */
+        }
+        .center-block {
+            /*margin-top: 20px;*/
+            text-align: center;
+
+        }
+
+        .btn-danger{
+            background-color: hotpink !important;
+        }
+        .row {
+            border: 0px solid;
+            border-bottom-width: 1px;
+            color: lavenderblush;
+        }
+        /*.row:last-child {*/
+        /*    border-top: 0px solid;*/
+        /*    color: lavenderblush;*/
+        /*}*/
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <div class="container-fluid">
+            <div class="navbar-nav">
+                <a class="navbar-brand" href="#">Date4u</a>
+
+
+                <a class="nav-link nav-item" th:href="@{/profile}">My Profile</a>
+                <a class="nav-link nav-item" th:href="@{/search}">Search</a>
+                <a class="nav-item nav-link" th:href="@{/logout}">Logout</a>
+                <!--       <a class="nav-link nav-item active" aria-current="page" th:href="@{/profile/{id}(id=${profileId})}">My Profile</a>-->
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="jumbotron">
+        <h2>My Gallery</h2>
+    </div>
+
+
+    <div style="width:80%" th:border="1" th:align="center" class="table">
+        <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+        <div class="col-md-9 mx-auto">
+            <div class="row">
+                <div class="col-md-3 mx-auto">
+                    <h5>Photo</h5>
+                </div>
+                <!--                <div class="col-md-3 mx-auto">-->
+                <!--                    <h5>Photo Name</h5>-->
+                <!--                </div>-->
+                <div class="col-md-2 mx-auto">
+                    <h5>Created On</h5>
+                </div>
+                <div class="col-md-2 mx-auto">
+                    <h5>Profile Photo</h5>
+                </div>
+                <div class="col-md-2 mx-auto">
+                    <h5>Delete Photo</h5>
+                </div>
+            </div>
+
+            <div th:each="photo:${photosList}">
+                <form action="#" th:action="@{/savePhoto}" method="POST">
+                <div class="row">
+                    <input type="hidden" th:value="${photo.id}" name="id"/>
+                    <input type="hidden" th:field="${photo.name}" name="name"/>
+                    <div class="col-md-3 mx-auto">
+                        <img th:src="@{'/images/img/' + ${photo.name} + '.jpg'}" class="d-block w-90"
+                             alt="Photo of Unicorn">
+                        <!--                         style="width: 70px; height: 80px;">-->
+                    </div>
+                    <!--                    <div class="col-md-3 mx-auto">-->
+                    <!--&lt;!&ndash;                        <span th:text="${photo.name}">name</span>&ndash;&gt;-->
+                    <!--                        <label>-->
+                    <!--                            <input class= "center-block" type="text" th:value="${photo.name}" th:placeholder="${photo.name}"-->
+                    <!--                                   th:default="${photo.name}" name="name"style="color: lightpink">-->
+                    <!--                        </label>-->
+                    <!--                        &lt;!&ndash;                               class="form-control mb-4 col-4">&ndash;&gt;-->
+                    <!--                    </div>-->
+                    <div class="col-md-2 mx-auto">
+                        <p class="center-block" th:text="${photo.created.toLocalDate()}">date</p>
+                        <!--                        <input type="hidden"  th:field="${photo.created}" name="created" />-->
+
+                    </div>
+
+                    <div class="col-md-2 mx-auto">
+                            <label th:text="(${photo.profilePhoto} ?'Currrent profile photo': 'Make to profile photo')"> Current profile photo</label>
+                            <br><br>
+                            <input type="checkbox" th:disabled="(${photo.profilePhoto} ? 'disabled')" name="profilePhoto" id="profilePhoto"
+                                   th:checked="${photo.profilePhoto}" />
+
+                    </div>
+                    <div class="col-md-2 mx-auto">
+                        <a th:href="@{/deletePhoto/{id}(id=${photo.id}) }"
+                           class="btn btn-danger">Delete</a>
+                        <button type="submit" name="submit" class="btn btn-primary"> Update</button>
+                    </div>
+
+                </div>
+                </form>
+            </div>
+
+        </div>
+        <span th:if="${msg != null}" th:text="${msg}"></span>
+    </div>
+
+
+    <!--    <div style="width:90%" th:border="1" th:align="center" class="table">-->
+    <!--    <div class="col-md-12 mx-auto">-->
+    <!--        <div class="row">-->
+    <!--            <div class="col-md-3 mx-auto">-->
+    <!--                <h5>Photo</h5>-->
+    <!--            </div>-->
+    <!--            <div class="col-md-3 mx-auto">-->
+    <!--                <h5>Photo Name</h5>-->
+    <!--            </div>-->
+    <!--            <div class="col-md-3 mx-auto">-->
+    <!--                <h5>Created On</h5>-->
+    <!--            </div>-->
+    <!--            <div class="col-md-1 mx-auto">-->
+    <!--                <h5>Set As Profile</h5>-->
+    <!--            </div>-->
+    <!--            <div class="col-md-2 mx-auto">-->
+    <!--                <h5>Edit / Delete</h5>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div th:each="photo:${photosList}">-->
+    <!--            <div class="row">-->
+    <!--                <div class="col-md-3 mx-auto">-->
+    <!--                    <img th:src="@{'/images/img/' + ${photo.name} + '.jpg'}" class="d-block w-90">-->
+    <!--&lt;!&ndash;                         style="width: 70px; height: 80px;">&ndash;&gt;-->
+    <!--                </div>-->
+    <!--                <div class="col-md-3 mx-auto">-->
+    <!--                    <span th:text="${photo.name}">name</span>-->
+    <!--                </div>-->
+    <!--                <div class="col-md-3 mx-auto">-->
+    <!--                    <a th:text="${photo.created.toLocalDate()}">date</a>-->
+    <!--                </div>-->
+    <!--                <div class="col-md-1 mx-auto">-->
+    <!--                    <a th:text="((${photo.isProfilePhoto}) ? ' YES ' : ' NO ')"> NO</a>-->
+    <!--                </div>-->
+    <!--                <div class="col-md-2 mx-auto">-->
+    <!--                    <a th:href="@{/deletePhoto/{id}(id=${photo.id}) }"-->
+    <!--                       class="btn btn-danger"  >Delete</a>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
+
+    <!--    <table style="width:80%" th:border="1" th:align="center" class="table table-striped table-responsive-md">-->
+
+    <!--        <thead>-->
+    <!--        <tr>-->
+    <!--            <th>Image</th>-->
+    <!--            <th>Name</th>-->
+    <!--            <th>Created On</th>-->
+    <!--            <th>Set As Profile</th>-->
+    <!--            <th> Edit </th>-->
+    <!--        </tr>-->
+    <!--        </thead>-->
+    <!--        <tbody>-->
+    <!--        <tr th:each="photo:${photosList}">-->
+    <!--&lt;!&ndash;            <td img class="d-block w-100" th:src="@{'/images/img/' + ${photo.name} + '.jpg'}"></td>&ndash;&gt;-->
+    <!--            <td img th:src="@{'/images/img/default.jpg'}" style="width: 50px; height: 60px;"></td>-->
+    <!--            <td th:text="${photo.name}"></td>-->
+    <!--            <td th:text="${photo.created.toLocalDate()}"></td>-->
+    <!--            <td th:text="((${photo.isProfilePhoto}) ? ' YES ' : ' NO ')"></td>-->
+    <!--            <td>-->
+    <!--                &lt;!&ndash;               <a th:href="@{/showFormForUpdate/{name}(name=${photo.name})}"&ndash;&gt;&ndash;&gt;-->
+    <!--                &lt;!&ndash;                      class="btn btn-primary">Update</a>&ndash;&gt;-->
+    <!--                <a th:href="@{/deletePhoto/{id}(id=${photo.id}) }"-->
+    <!--                   class="btn btn-danger" >Delete</a>-->
+    <!--            </td>-->
+    <!--        </tr>-->
+    <!--        </tbody>-->
+    <!--    </table>-->
+    <!--    -->
+
+    <footer style="font-size: large" class="panel-footer">
+        <p>
+            <a href="../profile.html" th:href="@{/profile}">Return to My Profile</a>
+        </p>
+    </footer>
+</div>
+<!--</div>-->
+<!--</div>-->
+<!--</nav>-->
+<!--</div>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
