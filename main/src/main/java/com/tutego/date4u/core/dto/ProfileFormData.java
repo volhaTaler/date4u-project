@@ -2,6 +2,7 @@ package com.tutego.date4u.core.dto;
 
 import com.tutego.date4u.core.photo.Photo;
 import com.tutego.date4u.core.profile.Profile;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,11 +18,12 @@ public class ProfileFormData {
     @NotEmpty
     private String nickname;
     @NotNull
+    @Min(18)
     @DateTimeFormat( pattern = "yyyy-MM-dd" )
     private LocalDate birthdate;
    
     private int hornlength;
-    @NotNull(message="1 - Male, 2 - Femael, 0 - Diverse")
+    @NotNull(message="1 - Male, 2 - Female, 0 - Diverse")
     private int gender;
     private Integer attractedToGender;
     private String description;

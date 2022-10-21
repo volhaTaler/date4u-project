@@ -62,7 +62,7 @@ public class ProfileRestController {
 //        if(allPhotos.get(0).isProfilePhoto()){
 //            return new ResponseEntity("The photo is a profile one. Cannot be deleted", HttpStatus.FORBIDDEN);
 //        }
-        profile.deletePhoto();
+        //profile.deletePhoto();
         //photoRepository.delete();
         profiles.save( profile );
         return ResponseEntity.ok().build();

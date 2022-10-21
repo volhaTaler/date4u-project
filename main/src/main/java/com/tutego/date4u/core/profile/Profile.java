@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Access( AccessType.FIELD )
@@ -72,6 +73,15 @@ public class Profile {
     setAttractedToGender( attractedToGender );
     setDescription( description );
     setLastseen( lastseen );
+    
+  }
+  
+  private void setProfilePhotoAsFirst(){
+   // Collections.sort(photos, (p1, p2) -> Boolean.compare(p1.isProfilePhoto(), p2.isProfilePhoto()));
+    if(!photos.isEmpty()){
+      photos = photos.stream().sorted(Comparator.comparing(Photo::isProfilePhoto, Comparator.reverseOrder())).collect(Collectors.toList());
+      
+    }
   }
 
   public Long getId() {
@@ -144,20 +154,28 @@ public class Profile {
   }
 
   public List<Photo> getPhotos() {
+    setProfilePhotoAsFirst();
     return photos;
   }
 
   public Profile add( Photo photo ) {
-    photos.add( photo );
+    if(photo.isProfilePhoto()){
+      photos.add(0, photo);
+    }else {
+      photos.add(photo);
+    }
     return this;
   }
   
-  public Profile deletePhoto( ){
-    photos.sort((p1, p2) -> (p1.getCreated().isBefore(p2.getCreated()))? 1: -1);
-    if(!photos.get(0).isProfilePhoto())
-      photos.remove(0);
-    // throw something?
-    return this;
+  public void deletePhoto( Photo photo){
+//    photos.sort((p1, p2) -> (p1.getCreated().isBefore(p2.getCreated()))? 1: -1);
+//    if(!photos.get(0).isProfilePhoto())
+    if(photos.contains(photo)) {
+      photos.remove(photo);
+    }else{
+      boolean b = photos.contains(photo);
+    }
+    
   }
 
   public Set<Profile> getProfilesThatILike() {

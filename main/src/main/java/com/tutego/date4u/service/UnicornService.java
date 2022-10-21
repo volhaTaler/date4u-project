@@ -20,9 +20,9 @@ public class UnicornService {
         
     }
     
-    public Optional<Long> checkEmail(String userEmail){
+    public Optional<Profile> getByNickname(String userEmail){
         Optional<Unicorn> unicorn = this.unicornRepository.findUnicornByEmail(userEmail);
-        return unicorn.map(Unicorn::getId);
+        return unicorn.map(Unicorn::getProfile);
     
     }
     public Optional<Long> checkLoginData(String userEmail, String password ){

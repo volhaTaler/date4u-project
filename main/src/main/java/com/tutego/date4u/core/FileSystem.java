@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
 @Component
 public class FileSystem {
 
-  private final Path root = Paths.get( System.getProperty( "user.home" ) ).resolve( "fs" ).toAbsolutePath().normalize();
+  private final Path root = Paths.get( System.getProperty( "user.dir" )  + "/main/src/main/resources/static/images").resolve( "img" ).toAbsolutePath().normalize();
 
   public FileSystem() {
     if ( !Files.isDirectory( root ) ) {
