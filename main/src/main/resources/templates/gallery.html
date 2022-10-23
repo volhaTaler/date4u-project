@@ -14,11 +14,11 @@
             margin-top: 10px;  /* Vertical Space */
             margin-bottom: 15px;  /* Vertical Space */
         }
-        .center-block {
-            /*margin-top: 20px;*/
-            text-align: center;
+        /*.center-block {*/
+        /*    !*margin-top: 20px;*!*/
+        /*    text-align: center;*/
 
-        }
+        /*}*/
 
         .btn-danger{
             background-color: hotpink !important;
@@ -59,7 +59,7 @@
     <div style="width:80%" th:border="1" th:align="center" class="table">
         <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
         <div class="col-md-9 mx-auto">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-md-3 mx-auto">
                     <h5>Photo</h5>
                 </div>
@@ -101,7 +101,7 @@
 
                     </div>
 
-                    <div class="col-md-2 mx-auto">
+                    <div class="col-md-2 mx-auto ">
                             <label th:text="(${photo.profilePhoto} ?'Currrent profile photo': 'Make to profile photo')"> Current profile photo</label>
                             <br><br>
                             <input type="checkbox" th:disabled="(${photo.profilePhoto} ? 'disabled')" name="profilePhoto" id="profilePhoto"

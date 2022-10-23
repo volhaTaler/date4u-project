@@ -14,23 +14,105 @@
     </nav>
     <div class="jumbotron">
         </br>
-        <h1 class="display-4">Find Your Destiny </h1>
+        <h1 class="display-4" th:align="center">Find Your Destiny </h1>
         </br></br>
-        <div>
-            <table class="table">
-                <thead>
-                <tr><th>#</th><th>Birthday</th><th>Nickname</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                <tr data-th-each="profile,it : ${pageOfProfiles}">
-                    <td data-th-text="${it.count} +(${pageOfProfiles.size()}* (${currentPage}-1))">COUNTER</td>
-                    <td data-th-text="${profile.nickname}">NICKNAME</td>
-                    <td data-th-text="${profile.birthdate}">BIRTHDAY</td>
-                    <td data-th-text="${profile.description}">DESCRIPTION</td>
-                </tr>
-                </tbody>
-            </table>
+        <form th:action="@{/search}" method="get">
+            <input type="text" name="keyword" th:value="${gender}"  placeholder="Gender" size="5" >
+            <button type="submit" class="btn btn-info" >Search</button>
+            <button type="submit" class="btn btn-info" >Reset</button>
+        </form>
+        <br><br>
+
+        <div style="width:80%" th:border="1" th:align="center" class="table">
+            <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+            <div class="col-md-12 mx-auto">
+                <div class="row">
+                    <div class="col-md-1 mx-auto">
+                        #
+                    </div>
+                    <div class="col-md-3 mx-auto">
+                        <h5>Photo</h5>
+                    </div>
+                    <div class="col-md-1 mx-auto">
+                        <h5>Unicorn Name</h5>
+                    </div>
+                    <div class="col-md-1 mx-auto">
+                        <h5> Age </h5>
+                    </div>
+                    <div class="col-md-1 mx-auto">
+                        <h5>Gender</h5>
+                    </div>
+                    <div class="col-md-1 mx-auto">
+                        <h5>Gender of Partner</h5>
+                    </div>
+                    <div class="col-md-4 mx-auto">
+                        <h5>Description</h5>
+                    </div>
+                </div>
+
+                <div data-th-each="profile,it : ${pageOfProfiles}">
+                        <div class="row">
+                            <input type="hidden" th:value="${profile.id}" name="id"/>
+                            <div class="col-md-1 mx-auto">
+                                <p data-th-text="${it.count} +(${pageOfProfiles.size()}* (${currentPage}-1))">COUNTER</p>
+                            </div>
+                            <div class="col-md-3 mx-auto">
+                                <img th:src="@{'/images/img/' + ${profile.profilePhoto} + '.jpg'}" style="width: 50px; height: 60px;"
+                                     alt="Photo of Unicorn">
+                                <br>
+                                <a th:href="@{/profile/{id}(id=${profile.id}) }"
+                                   class="btn btn-info">Go to Profile</a>
+                            </div>
+                            <div class="col-md-1 mx-auto">
+                                <p class="center-block" th:text="${profile.nickname}">date</p>
+                                <!--                        <input type="hidden"  th:field="${photo.created}" name="created" />-->
+
+                            </div>
+
+                            <div class="col-md-1 mx-auto">
+                            <p data-th-text="${profile.age}">Age</p>
+
+                        </div>
+                            <div class="col-md-1 mx-auto">
+                                <p data-th-text="${profile.gender}">Gender</p>
+
+                            </div>
+                            <div class="col-md-1 mx-auto">
+                                <p data-th-text="${profile.attractedToGender}">Gender</p>
+
+                            </div>
+                            <div class="col-md-4 mx-auto">
+                                <p data-th-text="${profile.description}">Description</p>
+
+                            </div>
+<!--                            <div class="col-md-2 mx-auto">-->
+<!--                                <a th:href="@{/deletePhoto/{id}(id=${photo.id}) }"-->
+<!--                                   class="btn btn-danger">Delete</a>-->
+<!--                                <button type="submit" name="submit" class="btn btn-primary"> Update</button>-->
+<!--                            </div>-->
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <span th:if="${msg != null}" th:text="${msg}"></span>
         </div>
+<!--        <div>-->
+<!--            <table class="table">-->
+<!--                <thead>-->
+<!--                <tr><th>#</th><th>Birthday</th><th>Nickname</th><th>Description</th></tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr data-th-each="profile,it : ${pageOfProfiles}">-->
+<!--                    <td data-th-text="${it.count} +(${pageOfProfiles.size()}* (${currentPage}-1))">COUNTER</td>-->
+<!--                    <td data-th-text="${profile.nickname}">NICKNAME</td>-->
+<!--                    <td data-th-text="${profile.birthdate}">BIRTHDAY</td>-->
+<!--                    <td data-th-text="${profile.description}">DESCRIPTION</td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
     </div>
     <footer style="font-size: large" class="panel-footer">
         Found [[${totalProfilesNumber}]] Profiles : Page [[${currentPage}]] of [[${totalPages}]]

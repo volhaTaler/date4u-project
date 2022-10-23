@@ -5,31 +5,39 @@ import com.tutego.date4u.core.profile.Profile;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class ProfileFormData {
     
+    public static final String DEFAULT_IMAGE_NAME = PhotoFormData.DEFAULT_IMAGE_NAME;
     private long id;
-    @NotEmpty
+    
+    @NotEmpty(message = "Nickname field cannot be empty")
+    @Size(min=5, max=50, message="Your nickname must be between 5 and 50 symbols long")
     private String nickname;
-    @NotNull
-    @Min(18)
+    @NotNull(message = "Date of birth must be entered")
+    @Past
     @DateTimeFormat( pattern = "yyyy-MM-dd" )
     private LocalDate birthdate;
-   
+    private int age;
+    @PositiveOrZero(message = "Please enter correct length of your horn" )
     private int hornlength;
-    @NotNull(message="1 - Male, 2 - Female, 0 - Diverse")
     private int gender;
     private Integer attractedToGender;
     private String description;
     private LocalDateTime lastseen;
-    
     private List<String> photos;
+    private String profilePhoto;
     public ProfileFormData() { }
     
     
@@ -45,6 +53,8 @@ public class ProfileFormData {
         this.description = description;
         this.lastseen = lastseen;
         this.photos = photos;
+        this.age = Period.between(this.birthdate, LocalDate.now()).getYears();
+        this.profilePhoto = getProfilePhoto();
     }
     
     public static ProfileFormData createPFD(Profile temp){
@@ -125,6 +135,16 @@ public class ProfileFormData {
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+    
+    public String getProfilePhoto(){
+        if(photos.isEmpty()){
+            return DEFAULT_IMAGE_NAME;
+        }
+        return photos.get(0);
+    }
     
     public void updateProfile(Profile profile){
         
@@ -137,10 +157,10 @@ public class ProfileFormData {
               if(this.getHornlength() >=0) {
                   profile.setHornlength(this.getHornlength());
               }
-              if(this.getGender() <2 && this.getGender() >=0) {
+              if(this.getGender() <=2 && this.getGender() >=0) {
                   profile.setGender(this.getGender());
               }
-              if(this.getAttractedToGender() <2 && this.getAttractedToGender() >=0) {
+              if(this.getAttractedToGender() <=2 && this.getAttractedToGender() >=0) {
               profile.setAttractedToGender(this.getAttractedToGender());
               }
               if(this.getDescription() != null) {
@@ -152,6 +172,15 @@ public class ProfileFormData {
                 this.getGender(), this.getAttractedToGender(), this.getDescription(),
                 LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
     }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
+    
     
     
     @Override

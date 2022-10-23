@@ -1,5 +1,6 @@
 package com.tutego.date4u.service;
 
+import com.tutego.date4u.core.dto.ProfileFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
@@ -19,11 +22,16 @@ public class ProfileService {
     private List<Profile> allProfiles;
     public ProfileService(ProfileRepository profiles) {
         this.profiles = profiles;
-        allProfiles = this.profiles.findAll();
+        //allProfiles = this.profiles.findAll();
     }
     
-    public Page<Profile> findPaginated(Pageable pageable) {
+    public Page<Profile> findPaginated(Pageable pageable, String gender) {
         
+        if(!gender.equals("egal")) {
+        allProfiles = this.profiles.findAll();
+        }else{
+            allProfiles = this.profiles.findByGender(1);
+        }
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
@@ -37,5 +45,10 @@ public class ProfileService {
         }
     
         return new PageImpl<Profile>(list, PageRequest.of(currentPage, pageSize), allProfiles.size());
+    }
+    
+    public List<ProfileFormData> convertProfileToProfileDTO(List<Profile> profiles){
+        
+        return profiles.stream().map(ProfileFormData::createPFD).toList();
     }
 }

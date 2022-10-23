@@ -17,5 +17,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
     List<Tuple> findMonthlyProfileCount();
    
    Optional<Profile> findByNickname(String name);
+  // @Query(value = "SELECT * FROM profiles")
+    List<Profile>findByGender(int gender);
   
 }

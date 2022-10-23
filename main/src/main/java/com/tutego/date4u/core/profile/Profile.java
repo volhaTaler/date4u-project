@@ -1,6 +1,7 @@
 package com.tutego.date4u.core.profile;
 
 import com.tutego.date4u.core.photo.Photo;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,6 +28,7 @@ public class Profile {
   @NotEmpty(message="User's name cannot be empty")
   @Size(min = 5, max = 250)
   private String nickname;
+  
   private LocalDate birthdate;
   private short hornlength;
   private byte gender;

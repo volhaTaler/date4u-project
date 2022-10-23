@@ -83,25 +83,33 @@ public class LoginController {
     
     @PostMapping("/registration/save")
     public String saveRegistration(@Valid @ModelAttribute("userProfile") ProfileFormData profile,
+                                   BindingResult profileResult,
                                    @Valid @ModelAttribute("user") UnicornFormData user,
-                                   BindingResult result, Model model) {
-        
+                                   BindingResult userResult, Model model) {
+  
+     
         if (unicornService.getByNickname(user.getEmail()).isPresent()) {
-            result.rejectValue("email", null,
+            userResult.rejectValue("email", null,
                     "There is already an account registered with the same email");
-            
         }
-        if (result.hasErrors()) {
+        if (userResult.hasErrors()) {
             model.addAttribute("user", user);
             model.addAttribute("userProfile", profile);
+            userResult.reject(null, "email or password is incorrect.");
+            return "/registration";
+        }
+        if(profileResult.hasErrors()){
+            model.addAttribute("user", user);
+            model.addAttribute("userProfile", profile);
+            userResult.reject(null, "something in your profile is incorrect.");
             return "/registration";
         }
         // create accounts
         UnicornFormData userUnicorn = new UnicornFormData(user.getPassword(), user.getEmail());
         Profile userProfile = profile.generateNewProfile();
-        Profile justCreated = profiles.save(userProfile);
-        Unicorn unicornToCreate = userUnicorn.generateNewUnicorn(justCreated);
-        unicorns.save(unicornToCreate);
+//        Profile justCreated = profiles.save(userProfile);
+//        Unicorn unicornToCreate = userUnicorn.generateNewUnicorn(justCreated);
+//        unicorns.save(unicornToCreate);
         return "redirect:/registration?success";
     }
 }

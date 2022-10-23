@@ -2,6 +2,11 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.0/dist/quartz/bootstrap.min.css">
+  <style>
+    .form-label{
+      text-decoration-color: darkmagenta;
+    }
+  </style>
 </head>
 <body>
 <div class="container">
@@ -22,7 +27,7 @@
     </div>
   </nav>
   </br>
-  <h2>Go Ahead and Find Your Destiny Now!</h2>
+  <h2 th:align="center">Go Ahead and Find Your Destiny Now!</h2>
   <br /><br />
   <div class="container">
     <div class="row col-md-8 offset-md-2">
@@ -65,12 +70,12 @@
                       th:field="${userProfile.birthdate}"
                       type="text"
               />
-              <p th:errors = "${userProfile.birthdate}" class="text-danger"
+              <p th:errors = "${userProfile.birthdate}" class="text-warning"
                  th:if="${#fields.hasErrors('userProfile.birthdate')}"></p>
             </div>
           <div class="form-group mb-3">
             <label class="form-label">Hornlength</label>
-            <input
+            <input style=" color: darkviolet"
                     class="form-control"
                     id="hornlength"
                     name="hornlength"
@@ -78,33 +83,37 @@
                     th:field="${userProfile.hornlength}"
                     type="text"
             />
-                          <p th:errors = "${userProfile.hornlength}" class="text-danger"
+                          <p th:errors = "${userProfile.hornlength}" class="text-warning"
                              th:if="${#fields.hasErrors('userProfile.hornlength')}"></p>
           </div>
           <div class="form-group mb-3">
             <label class="form-label">Gender</label>
-            <input
-                    class="form-control"
-                    id="gender"
-                    name="gender"
-                    placeholder=""
-                    th:field="${userProfile.gender}"
-                    type="text"
-            />
-                          <p th:errors = "${userProfile.gender}" class="text-danger"
+            <select class="form-control" data-th-field="${userProfile.gender}" id="gender" style=" color: darkviolet">
+              <option th:value="0" th:text="Other"></option>
+              <option  th:value="2" th:text="Female"></option>
+              <option th:value="1" th:text="Male"></option>
+
+            </select>
+<!--            <input-->
+<!--                    class="form-control"-->
+<!--                    id="genderString"-->
+<!--                    name="genderString"-->
+<!--                    placeholder="Other"-->
+<!--                    th:field="${userProfile.genderString}"-->
+<!--                    type="text"-->
+<!--            />-->
+                          <p th:errors = "${userProfile.gender}" class="text-warning"
                              th:if="${#fields.hasErrors('userProfile.gender')}"></p>
           </div>
           <div class="form-group mb-3">
-            <label class="form-label">Gender of Partner</label>
-            <input
-                    class="form-control"
-                    id="attractedToGender"
-                    name="attractedToGender"
-                    placeholder="Example: 1- Male, 2- Female, 0- Diverse"
-                    th:field="${userProfile.attractedToGender}"
-                    type="text"
-            />
-                          <p th:errors = "${userProfile.attractedToGender}" class="text-danger"
+            <label class="form-label" >Gender of Partner</label>
+            <select class="form-control" data-th-field="${userProfile.attractedToGender}" id="attractedToGender" style=" color: darkviolet">
+              <option th:value="0" th:text="Other"></option>
+              <option  th:value="2" th:text="Female"></option>
+              <option th:value="1" th:text="Male"></option>
+
+            </select>
+                          <p th:errors = "${userProfile.attractedToGender}" class="text-warning"
                              th:if="${#fields.hasErrors('userProfile.attractedToGender')}"></p>
           </div>
           <div class="form-group mb-3">
@@ -117,7 +126,7 @@
                     th:field="${userProfile.description}"
                     type="text"
             />
-                          <p th:errors = "${userProfile.description}" class="text-danger"
+                          <p th:errors = "${userProfile.description}" class="text-warning"
                              th:if="${#fields.hasErrors('userProfile.description')}"></p>
           </div>
 

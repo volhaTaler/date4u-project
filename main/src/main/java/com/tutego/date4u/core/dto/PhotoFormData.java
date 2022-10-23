@@ -2,18 +2,16 @@ package com.tutego.date4u.core.dto;
 
 import com.tutego.date4u.core.photo.Photo;
 import com.tutego.date4u.core.profile.Profile;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoFormData {
+    
+    public static final String DEFAULT_IMAGE_NAME = "default";
     
     private Long id;
     

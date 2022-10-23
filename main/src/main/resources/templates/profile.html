@@ -49,15 +49,17 @@
                             <div style="width: 50%; height: 100px; display: table-cell; alignment: center" class="mb-3">
                                 <label for="genderInput" class="form-label">Gender  </label>
                                 <select data-th-field="*{gender}" id="genderInput">
-                                    <option th:value="1" th:text="FEE"></option>
-                                    <option th:value="2" th:text="MAA"></option>
+                                    <option th:value="1" th:text="Male"></option>
+                                    <option th:value="2" th:text="Female"></option>
+                                    <option th:value="0" th:text="Other"></option>
                                 </select>
                             </div>
                             <div style="width: 50%; height: 100px; display: table-cell; alignment: center" class="mb-3">
                                 <label for="partnerInput" class="form-label"> Desired Partner</label>
                                 <select data-th-field="*{attractedToGender}" id="partnerInput">
-                                    <option th:value="1" th:text="FEE"></option>
-                                    <option th:value="2" th:text="MAA"></option>
+                                    <option th:value="1" th:text="Male"></option>
+                                    <option th:value="2" th:text="Female"></option>
+                                    <option th:value="0" th:text="Other"></option>
                                 </select>
                             </div>
                         </div>

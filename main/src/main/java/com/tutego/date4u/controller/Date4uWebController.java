@@ -55,20 +55,23 @@ public class Date4uWebController {
         this.profiles = profiles;
     }
     
-   
-    
     
     @GetMapping( "/search" )
-    public String searchPage(Model model, @RequestParam(defaultValue="1") int page,
-                             @RequestParam(defaultValue = "5") int size, RedirectAttributes attributes){
+    public String searchPage(Model model,
+                             @RequestParam(defaultValue="1") int page,
+                             @RequestParam(defaultValue = "5") int size,
+                             @RequestParam(defaultValue = "egal", required = false) String gender,
+                             RedirectAttributes attributes){
         
-        Page<Profile> pagesOfProfiles =  profileService.findPaginated(PageRequest.of(page-1, 5));
+        Page<Profile> pagesOfProfiles =  profileService.findPaginated(PageRequest.of(page-1, 5), gender);
+        
         int totalPages = pagesOfProfiles.getTotalPages();
         if(page > totalPages){
             attributes.addFlashAttribute("message", "This page number is not valid.");
             return "redirect:/search";
         }
-        model.addAttribute("pageOfProfiles", pagesOfProfiles.getContent());
+        List<ProfileFormData> listOfProfileDTO = profileService.convertProfileToProfileDTO(pagesOfProfiles.getContent());
+        model.addAttribute("pageOfProfiles", listOfProfileDTO);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalProfilesNumber", pagesOfProfiles.getTotalElements());
@@ -79,9 +82,37 @@ public class Date4uWebController {
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-    
+        
         return "search";
     }
+    
+//    @GetMapping( "/search" )
+//    public String searchPage(Model model,
+//                             @RequestParam(defaultValue="1") int page,
+//                             @RequestParam(defaultValue = "5") int size, RedirectAttributes attributes){
+//
+//        Page<Profile> pagesOfProfiles =  profileService.findPaginated(PageRequest.of(page-1, 5));
+//
+//        int totalPages = pagesOfProfiles.getTotalPages();
+//        if(page > totalPages){
+//            attributes.addFlashAttribute("message", "This page number is not valid.");
+//            return "redirect:/search";
+//        }
+//        List<ProfileFormData> listOfProfileDTO = profileService.convertProfileToProfileDTO(pagesOfProfiles.getContent());
+//        model.addAttribute("pageOfProfiles", listOfProfileDTO);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", totalPages);
+//        model.addAttribute("totalProfilesNumber", pagesOfProfiles.getTotalElements());
+//
+//        if (totalPages > 0) {
+//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
+//
+//        return "search";
+//    }
     
    
     

@@ -3,7 +3,7 @@ package com.tutego.date4u.controller;
 
 import com.tutego.date4u.core.config.CurrentUser;
 import com.tutego.date4u.core.dto.ProfileFormData;
-import com.tutego.date4u.core.photo.Photo;
+import com.tutego.date4u.core.dto.PhotoFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
 import com.tutego.date4u.core.profile.UnicornRepository;
@@ -28,6 +28,7 @@ import java.util.Optional;
 @Controller
 public class ProfileController {
     
+    private final String DEFAULT_IMAGE_NAME = PhotoFormData.DEFAULT_IMAGE_NAME;
     @Autowired
     private final ProfileRepository profiles;
     
@@ -77,12 +78,12 @@ public class ProfileController {
         Profile temp = profile.get();
         model.addAttribute("profile", ProfileFormData.createPFD(temp));
         
-        return "redirect:/profile/" + id;
+        return "/profile";
     }
     
     @PostMapping( value = "/save" , params = "action=save")
     public String saveProfile( @ModelAttribute("profile") ProfileFormData profile ) {
-        log.info( profile.toString() );
+        log.info( "profile to string: " +profile.toString() );
         Optional<Profile> toUpdateProfile = profiles.findById(profile.getId());
         if(toUpdateProfile.isPresent()){
             Profile tmp = toUpdateProfile.get();
