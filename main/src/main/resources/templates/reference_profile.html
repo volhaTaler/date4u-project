@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.0/dist/quartz/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+  <style>
+    .form-label{
+      /*max-width: 250px;*/
+      /*max-height: 250px;*/
+      margin-bottom: 5px;   /* Horizontal Space */
+      margin-top: 5px;  /* Vertical Space */
+      /*border: 2px solid b;*/
+      /*padding-top: 5px;*/
+      /*padding-bottom: 5px;*/
+
+    }
+    .btn, .card-title {
+      margin-bottom: 20px;   /* Horizontal Space */
+      margin-top: 20px;  /* Vertical Space */
+    }
+  </style>
+
+</head>
+<body>
+<div class="container">
+  <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+    <div class="container-fluid">
+      <div class="navbar-nav">
+        <a class="navbar-brand" href="#">Date4u</a>
+        <a class="nav-link nav-item" th:href="@{/profile}">My Profile</a>
+        <a class="nav-link nav-item" th:href="@{/gallery}">My Gallery</a>
+        <a class="nav-link nav-item" th:href="@{/search}">Search</a>
+        <a class="nav-item nav-link" th:href="@{/logout}">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <div class="jumbotron">
+    <h1 class="display-4 " th:text="' Learn more about  '+ ${profile.nickname}">Profile</h1>
+  </div>
+  </br></br>
+  <div data-th-object="${profile}">
+    <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+    <form data-th-object="${profile}" data-th-action="@{/profile/{id}}" method="get">
+      <input type="text" data-th-field="*{id}" hidden>
+      <div class="container" style="width:90%">
+        <div class="col-sm-15">
+          <div class="row justify-content-around">
+            <div class="col-4">
+              <div class="row">
+                <img th:src="@{/images/img/{photo}.jpg(photo=${profilePhoto})}" class="d-block w-140">
+              </div>
+              <div class="row">
+                <label for="lastseen" class="form-label">Lastseen</label>
+                <p  th:text="${#temporals.format(profile.lastseen, 'dd-MM-yyyy HH:mm')}" id="lastseen"
+                       class="form-control" >
+              </div>
+              <div class="row">
+                <label for="genderInput" class="form-label">Gender </label>
+                <input type="text" data-th-field="*{genderAsStr}" id="genderInput"
+                       class="form-control" readonly>
+              </div>
+            </div>
+            <div class="col-6">
+
+              <div class="col">
+                <label for="nickname" class="form-label">My Nickname</label>
+                <input type="text" data-th-field="*{nickname}" id="nickname"
+                       class="form-control" readonly>
+              </div>
+              <div class="col">
+                <label for="birthdateInput" class="form-label">My Date of Birth</label>
+                <input type="text" data-th-field="*{birthdate}" id="birthdateInput"
+                       class="form-control" readonly>
+              </div>
+              <div class="col">
+                <div class="col">
+                  <label for="ageInput" class="form-label">My Age</label>
+                  <input type="text" data-th-field="*{age}" id="ageInput"
+                         class="form-control" readonly>
+                </div>
+                <div class="col">
+                <label for="hornlengthInput" class="form-label">Length of Horn</label>
+                <input type="text" data-th-field="*{hornlength}" id="hornlengthInput"
+                       class="form-control" readonly>
+              </div>
+              <div class="col">
+                <label for="descriptionInput" class="form-label">About  Me</label>
+                <input type="text" data-th-field="*{description}" id="descriptionInput"
+                       class="form-control" readonly>
+              </div>
+              <div class="col">
+                <label for="partnerInput" class="form-label">Gender of Partner </label>
+                <input type="text" data-th-field="*{attractedToGenderStr}" id="partnerInput"
+                       class="form-control" readonly>
+              </div>
+
+            </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="flex-content" style="width: 90%">
+    <div class="row justify-content-around">
+      <div class="col-md-6 mx-auto">
+        <div id="indicators" class="carousel slide mt-4" data-bs-ride="carousel"
+             style="height: 300px; width: 300px; margin-left: auto; margin-right: auto">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img class="d-block w-100" th:src="@{/images/img/{imgProf}.jpg(imgProf=${profilePhoto})}">
+            </div>
+            <div th:if="${photosList!=null and !photosList.isEmpty()}">
+              <div class="carousel-item" th:each="photo : ${photosList}">
+                <img class="d-block w-100" th:src="@{/images/img/{item}.jpg(item=${photo})}" alt="image from the own gallery" >
+              </div>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#indicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#indicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+
+        </div>
+
+        </br></br>
+      </div>
+      <div class="col-md-6 mx-auto">
+        <div class="card" style="width: 25rem;margin-left: 15px; margin-top: 15px" th:align="center">
+          <div class="card-body">
+            <h4 class="card-title">Why I am here</h4>
+            <h6 class="card-subtitle mb-2 text-muted">...</h6>
+           <p class="card-text">"Date to be known, not to be liked",
+            "Dating is all about the chase. It’s fun!",
+            "You can’t blame gravity for falling in love."</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <footer>
+    <br><br>
+    <nav class="navbar navbar-expand-lg bg-info navbar-info">
+      <div class="container-fluid">
+        <div class="navbar-nav">
+          <a class="navbar-brand" href="#">Date4u</a>
+          <a class="nav-link nav-item" th:href="@{/gallery}">My Gallery</a>
+          <a class="nav-link nav-item" th:href="@{/search}">Search</a>
+          <a class="nav-item nav-link" th:href="@{/logout}">Logout</a>
+        </div>
+      </div>
+    </nav>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

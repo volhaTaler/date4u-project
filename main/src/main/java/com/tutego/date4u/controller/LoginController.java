@@ -51,13 +51,13 @@ public class LoginController {
         this.profiles = profiles;
     }
     
-    @RequestMapping( "/" )
-    public String goToIndex() {
-        
-        return "index";
-    }
+//    @RequestMapping( "/" )
+//    public String goToIndex() {
+//
+//        return "index";
+//    }
     
-    @GetMapping("/login")
+    @GetMapping({"/login", "/"})
     public String login(){
         
         return "login";

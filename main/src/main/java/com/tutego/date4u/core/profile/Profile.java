@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 public class Profile {
   
   public static final int DIV = 0;
-  public static final int FEE = 1;
-  public static final int MAA = 2;
+  public static final int FEE = 2;
+  public static final int MAA = 1;
   
 
   @Id @GeneratedValue( strategy = GenerationType.IDENTITY )

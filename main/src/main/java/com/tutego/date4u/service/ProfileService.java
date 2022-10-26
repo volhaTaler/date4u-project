@@ -12,12 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,81 +34,77 @@ public class ProfileService {
         //allProfiles = this.profiles.findAll();
     }
     
-    public Page<Profile> findPaginated(Pageable pageable, FilterFormData filter) {
+    public Page<Profile> findPaginated(Pageable pageable, FilterFormData filter, Optional<Long> ownId) {
         Page<Profile> foundProfiles = null;
         LocalDate startDate = LocalDate.now().minusYears(filter.getMaxAge());
         LocalDate endDate = LocalDate.now().minusYears(filter.getMinAge());
         log.info("start date: " + startDate + " and endDate: " +endDate);
         // all genders, so gender is set at null
-        if(Gender.ALL.getGender() == filter.getGender()){
-            if(filter.getMinHornlength() == filter.getMaxHornlength()){
-                if(filter.getMinAge() == filter.getMaxAge()){
+        if (Gender.ALL.getGender() == filter.getGender()) {
+            if (filter.getMinHornlength() == filter.getMaxHornlength()) {
+                if (filter.getMinAge() == filter.getMaxAge()) {
                     // select p FROM profile WHERE p.gender is ANY AND p.hornLength == filter.getMinHornlength() AND p.birthdate == startDate);
-                    foundProfiles = this.profiles.findProfileByBirthdateAndHornlength(startDate, filter.getMinHornlength(), pageable);
-                }else{
+                    foundProfiles =
+                            this.profiles.findProfileByBirthdateAndHornlengthAndIdNot(startDate, filter.getMinHornlength(), ownId.get(), pageable);
+                } else {
                     // select p FROM profile WHERE p.gender is ANY AND p.hornLength == filter.getMinHornlength() AND p.birthdate BETWEEN startDate AND endDate);
-                    foundProfiles = this.profiles.findProfileByBirthdateBetweenAndHornlength(startDate, endDate, filter.getMinHornlength(), pageable);
+                    foundProfiles =
+                            this.profiles.findProfileByBirthdateBetweenAndHornlengthAndIdNot(startDate, endDate,
+                                    filter.getMinHornlength(), ownId.get(), pageable);
                 }
-                
-            }else{
-                if(filter.getMinAge() == filter.getMaxAge()){
+            
+            } else {
+                if (filter.getMinAge() == filter.getMaxAge()) {
                     // select p FROM profile WHERE p.gender is ANY
                     // AND p.hornLength BETWEEN filter.getMinHornlength() AND filter.getMinHornlength()
                     // AND p.birthdate == startDate);
-                    foundProfiles = this.profiles.findProfileByBirthdateAndHornlengthBetween(startDate, filter.getMinHornlength(),
-                            filter.getMaxHornlength(), pageable);
-                }else{
+                    foundProfiles =
+                            this.profiles.findProfileByBirthdateAndHornlengthBetweenAndIdNot(startDate, filter.getMinHornlength(),
+                                    filter.getMaxHornlength(), ownId.get(), pageable);
+                } else {
                     // select p FROM profile WHERE p.gender is ANY
                     // AND p.hornLength BETWEEN filter.getMinHornlength() AND filter.getMinHornlength()
                     // AND p.birthdate BETWEEN startDate AND endDate);
-                    foundProfiles = this.profiles.findProfileByBirthdateBetweenAndHornlengthBetween(startDate, endDate, filter.getMinHornlength(),
-                            filter.getMaxHornlength(), pageable);
+                    foundProfiles =
+                            this.profiles.findProfileByBirthdateBetweenAndHornlengthBetweenAndIdNot(startDate, endDate, filter.getMinHornlength(),
+                                    filter.getMaxHornlength(), ownId.get(), pageable);
                 }
             
             }
-////            for(long g : Gender.getAllGenders()) {
-//                        foundProfiles = this.profiles.findProfileByBirthdateBetween(startDate, endDate, pageable);
-////            }
-//            log.info("list of found profiles for dates: " + startDate + " and the enddate: " + endDate);
-//            log.info("number of found profiles --- " + foundProfiles.getTotalElements());
-//            log.info("number of found pages: " + foundProfiles.getTotalPages());
-////            log.info("number of found profiles --- " + allProfiles.size());
-////            log.info("list of found profiles: " + allProfiles);
         }else{
-//            foundProfiles = this.profiles.findProfileByBirthdateBetweenAndGender(startDate, endDate, filter.getGender(), pageable);
-//            log.info("list of found profiles for dates: " + startDate + " and the enddate: " + endDate);
-//            log.info("number of found profiles --- " + foundProfiles.getTotalElements());
-//            log.info("number of found pages: " + foundProfiles.getTotalPages());
-            
-            if(filter.getMinHornlength() == filter.getMaxHornlength()){
-                if(filter.getMinAge() == filter.getMaxAge()){
+        
+            if (filter.getMinHornlength() == filter.getMaxHornlength()) {
+                if (filter.getMinAge() == filter.getMaxAge()) {
                     // select p FROM profile WHERE p.gender== filter.getGender()
                     // AND p.hornLength == filter.getMinHornlength() AND p.birthdate == startDate);
-                    foundProfiles = this.profiles.findProfileByGenderAndBirthdateAndHornlength(filter.getGender(),
-                            startDate, filter.getMinHornlength(), pageable);
-                }else{
+                    foundProfiles = this.profiles.findProfileByGenderAndBirthdateAndHornlengthAndIdNot(filter.getGender(),
+                            startDate, filter.getMinHornlength(), ownId.get(), pageable);
+                } else {
                     // select p FROM profile WHERE p.gender p.gender== filter.getGender()
                     // AND p.hornLength == filter.getMinHornlength() AND p.birthdate BETWEEN startDate AND endDate);
-                    foundProfiles = this.profiles.findProfileByGenderAndBirthdateBetweenAndHornlength(filter.getGender(),
-                            startDate, endDate, filter.getMinHornlength(), pageable);
+                    foundProfiles =
+                            this.profiles.findProfileByGenderAndBirthdateBetweenAndHornlengthAndIdNot(filter.getGender(),
+                                    startDate, endDate, filter.getMinHornlength(), ownId.get(), pageable);
                 }
-        
-            }else{
-                if(filter.getMinAge() == filter.getMaxAge()){
+            
+            } else {
+                if (filter.getMinAge() == filter.getMaxAge()) {
                     // select p FROM profile WHERE p.gender p.gender== filter.getGender()
                     // AND p.hornLength BETWEEN filter.getMinHornlength() AND filter.getMinHornlength()
                     // AND p.birthdate == startDate);
-                    foundProfiles = this.profiles.findProfileByGenderAndBirthdateAndHornlengthBetween(filter.getGender(), startDate, filter.getMinHornlength(),
-                            filter.getMaxHornlength(), pageable);
-                }else{
+                    foundProfiles =
+                            this.profiles.findProfileByGenderAndBirthdateAndHornlengthBetweenAndIdNot(filter.getGender(), startDate, filter.getMinHornlength(),
+                                    filter.getMaxHornlength(), ownId.get(), pageable);
+                } else {
                     // select p FROM profile WHERE p.gender p.gender== filter.getGender()
                     // AND p.hornLength BETWEEN filter.getMinHornlength() AND filter.getMinHornlength()
                     // AND p.birthdate BETWEEN startDate AND endDate);
-                    foundProfiles = this.profiles.findProfileByGenderAndBirthdateBetweenAndHornlengthBetween(filter.getGender(),
-                            startDate, endDate, filter.getMinHornlength(),
-                            filter.getMaxHornlength(), pageable);
+                    foundProfiles =
+                            this.profiles.findProfileByGenderAndBirthdateBetweenAndHornlengthBetweenAndIdNot(filter.getGender(),
+                                    startDate, endDate, filter.getMinHornlength(),
+                                    filter.getMaxHornlength(), ownId.get(), pageable);
                 }
-        
+            
             }
         }
 //        int pageSize = pageable.getPageSize();
@@ -122,11 +120,15 @@ public class ProfileService {
 //        }
 //
 //        return new PageImpl<Profile>(list, PageRequest.of(currentPage, pageSize), allProfiles.size());
-        return foundProfiles;
+        
+            
+            return foundProfiles;
+        
     }
     
     public List<ProfileFormData> convertProfileToProfileDTO(List<Profile> profiles){
         
         return profiles.stream().map(ProfileFormData::createPFD).toList();
     }
+    
 }

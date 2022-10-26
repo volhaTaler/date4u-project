@@ -6,12 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 
 public interface ProfileRepository extends JpaRepository<Profile, Long>{
     
@@ -22,66 +21,74 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
     List<Tuple> findMonthlyProfileCount();
     
     
-    Page<Profile> findProfileByBirthdateAndHornlength(
+    Page<Profile> findProfileByBirthdateAndHornlengthAndIdNot(
             @Param("startDate")LocalDate startDate,
             @Param("minHornlength") int minHornlength,
+            @Param("ownId") long ownId,
             Pageable pageable
     );
     
-    Page<Profile> findProfileByBirthdateBetweenAndHornlength(
+    Page<Profile> findProfileByBirthdateBetweenAndHornlengthAndIdNot(
             @Param("startDate")LocalDate startDate,
             @Param("endDate")LocalDate endDate,
             @Param("minHornlength") int minHornlength,
+            @Param("ownId") long ownId,
             Pageable pageable
     );
-    Page<Profile> findProfileByBirthdateAndHornlengthBetween(
+    Page<Profile> findProfileByBirthdateAndHornlengthBetweenAndIdNot(
             @Param("startDate")LocalDate startDate,
             @Param("minHornlength") int minHornlength,
             @Param("maxHornlength") int maxHornlength,
+            @Param("ownId") long ownId,
             Pageable pageable
     );
-    Page<Profile> findProfileByBirthdateBetweenAndHornlengthBetween(
+    Page<Profile> findProfileByBirthdateBetweenAndHornlengthBetweenAndIdNot(
             @Param("startDate")LocalDate startDate,
             @Param("endDate")LocalDate endDate,
             @Param("minHornlength") int minHornlength,
             @Param("maxHornlength") int maxHornlength,
+            @Param("ownId") long ownId,
             Pageable pageable
     );
     
-    Page<Profile> findProfileByGenderAndBirthdateAndHornlength(
+    Page<Profile> findProfileByGenderAndBirthdateAndHornlengthAndIdNot(
             @Param("gender") long gender,
             @Param("startDate")LocalDate startDate,
             @Param("minHornlength") int minHornlength,
+            @Param("ownId") long ownId,
             Pageable pageable
     );
     
-    Page<Profile> findProfileByGenderAndBirthdateBetweenAndHornlength(
+    Page<Profile> findProfileByGenderAndBirthdateBetweenAndHornlengthAndIdNot(
             @Param("gender") long gender,
             @Param("startDate")LocalDate startDate,
             @Param("endDate")LocalDate endDate,
             @Param("minHornlength") int minHornlength,
+            @Param("ownId") long ownId,
             Pageable pageable
     );
   
-    Page<Profile> findProfileByGenderAndBirthdateAndHornlengthBetween(
+    Page<Profile> findProfileByGenderAndBirthdateAndHornlengthBetweenAndIdNot(
             @Param("gender") long gender,
             @Param("startDate")LocalDate startDate,
             @Param("maxHornlength") int maxHornlength,
             @Param("minHornlength") int minHornlength,
+            @Param("ownId") long ownId,
             Pageable pageable
     );
     
-    Page<Profile> findProfileByGenderAndBirthdateBetweenAndHornlengthBetween(
+    Page<Profile> findProfileByGenderAndBirthdateBetweenAndHornlengthBetweenAndIdNot(
             @Param("gender") long gender,
             @Param("startDate")LocalDate startDate,
             @Param("endDate")LocalDate endDate,
             @Param("maxHornlength") int maxHornlength,
             @Param("minHornlength") int minHornlength,
+            @Param("ownId") long ownId,
             Pageable pageable
     );
     
 //
-//    Page<Profile> findProfileByBirthdateBetweenAndGender(
+//    Page<Profile> findProfileByBirthdateBetweenAndGenderAndIdNot(
 //            @Param("startDate")LocalDate startDate,
 //            @Param("endDate")LocalDate endDate,
 //            @Param("gender") long gender,

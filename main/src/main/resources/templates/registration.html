@@ -2,10 +2,18 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.0/dist/quartz/bootstrap.min.css">
+
+  <!-- Vanilla Datepicker CSS -->
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker.min.css'>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
   <style>
     .form-label{
       text-decoration-color: darkmagenta;
     }
+
   </style>
 </head>
 <body>
@@ -62,11 +70,12 @@
 
             <div class="form-group mb-3">
               <label class="form-label">Date of Birth</label>
+
               <input
                       class="form-control"
                       id="birthdate"
                       name="birthdate"
-                      placeholder="Example: 2022-12-12"
+                      placeholder="Example: 2002-12-12"
                       th:field="${userProfile.birthdate}"
                       type="text"
               />
@@ -167,6 +176,7 @@
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>
+

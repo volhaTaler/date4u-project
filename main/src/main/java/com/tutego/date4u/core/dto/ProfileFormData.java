@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -33,12 +34,14 @@ public class ProfileFormData {
     @PositiveOrZero(message = "Please enter correct length of your horn" )
     private int hornlength;
     private int gender;
+    private String genderAsStr;
     private Integer attractedToGender;
+    private String attractedToGenderStr;
     @Size(min=0, max=250, message="Please write something about yourself. Keep it short and easy.")
     private String description;
     private LocalDateTime lastseen;
     private List<String> photos;
-    private String profilePhoto;
+
     public ProfileFormData() { }
     
     
@@ -54,8 +57,9 @@ public class ProfileFormData {
         this.description = description;
         this.lastseen = lastseen;
         this.photos = photos;
-        this.age = Period.between(this.birthdate, LocalDate.now()).getYears();
-        this.profilePhoto = getProfilePhoto();
+        this.age = Period.between(birthdate, LocalDate.now()).getYears();
+        this.genderAsStr = getGenderString(gender);
+        this.attractedToGenderStr = getGenderString(attractedToGender);
     }
     
     public static ProfileFormData createPFD(Profile temp){
@@ -136,9 +140,9 @@ public class ProfileFormData {
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
-    }
+//    public void setProfilePhoto(String profilePhoto) {
+//        this.profilePhoto = profilePhoto;
+//    }
     
     public String getProfilePhoto(){
         if(photos.isEmpty()){
@@ -188,14 +192,21 @@ public class ProfileFormData {
         return Gender.getGenderString(gender);
     }
     
-    public String getGenderAsStr(){
-        return getGenderString(this.gender);
-    }
-    public String getAttractGenderAsStr(){
-        return getGenderString(this.attractedToGender);
+    public String getGenderAsStr() {
+        return genderAsStr;
     }
     
+    public void setGenderAsStr(String genderAsStr) {
+        this.genderAsStr = genderAsStr;
+    }
     
+    public String getAttractedToGenderStr() {
+        return attractedToGenderStr;
+    }
+    
+    public void setAttractedToGenderStr(String attractedToGenderStr) {
+        this.attractedToGenderStr = attractedToGenderStr;
+    }
     
     @Override
     public String toString() {

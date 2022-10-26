@@ -3,18 +3,14 @@ package com.tutego.date4u.controller;
 
 import com.tutego.date4u.core.config.CurrentUser;
 import com.tutego.date4u.core.dto.ProfileFormData;
-import com.tutego.date4u.core.dto.PhotoFormData;
-import com.tutego.date4u.core.dto.UnicornFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
 import com.tutego.date4u.core.profile.UnicornRepository;
-import com.tutego.date4u.service.ProfileService;
 import com.tutego.date4u.service.UnicornService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,20 +19,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class ProfileController {
     
-    private final String DEFAULT_IMAGE_NAME = PhotoFormData.DEFAULT_IMAGE_NAME;
     @Autowired
     private final ProfileRepository profiles;
     
-    @Autowired
-    private ProfileService profileService;
     
     @Autowired
     private UnicornService unicornService;
@@ -44,7 +38,8 @@ public class ProfileController {
     
     private final Logger log = LoggerFactory.getLogger( getClass() );
     
-    public ProfileController(final ProfileRepository profiles, UnicornRepository unicorns) {
+    public ProfileController(final ProfileRepository profiles) {
+        
         this.profiles = profiles;
     }
     
@@ -57,17 +52,18 @@ public class ProfileController {
             log.info(unicorn.getUsername() + ":  " + unicorn.getPassword());
             Optional<Profile> currentProfile= unicornService.getNicknameByEmail(unicorn.getUsername());
             Profile temp = currentProfile.get();
-            //List<Photo> photos = temp.getPhotos();
+            currentProfile.get().setLastseen(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+            profiles.save(currentProfile.get());
             ProfileFormData pfd = ProfileFormData.createPFD(temp);
             List<String> photos = pfd.getPhotos();
-            if(photos == null || photos.isEmpty()){
-                model.addAttribute("profilePhoto", DEFAULT_IMAGE_NAME);
+            model.addAttribute("profilePhoto", pfd.getProfilePhoto());
+            if(photos.isEmpty()){
+                model.addAttribute("photosList", pfd.getProfilePhoto());
             }else{
-                model.addAttribute("profilePhoto", photos.get(0));
+                model.addAttribute("photosList", photos.subList(1, photos.size()));
             }
-            
             model.addAttribute("profile", pfd);
-            model.addAttribute("photosList", photos.subList(1, photos.size()));
+           
             return "profile";
         }
         
@@ -75,30 +71,25 @@ public class ProfileController {
     }
     @RequestMapping( "/profile/{id}" )
     public String profilePage(@PathVariable("id") long id,
-                              Authentication auth,
                               Model model) {
-        CurrentUser unicorn = null;
-        
-        if(auth != null) {
-            unicorn = (CurrentUser) auth.getPrincipal();
-        }else{
-            model.addAttribute("message", "You are not authorized. Pleas log in.");
-            return "redirect:/search?";
-        }
-        long ownId = unicorn.getProfile().getId();
+
         Optional<Profile> profile = profiles.findById(id);
         if(profile.isEmpty()){
             return "redirect:/search?";
         }
-        Profile temp = profile.get();
-        if(ownId==id){
-            model.addAttribute("theOwner", true);
-        }else{
-            model.addAttribute("theOwner", false);
-        }
-        model.addAttribute("profile", ProfileFormData.createPFD(temp));
+        ProfileFormData temp = ProfileFormData.createPFD(profile.get());
         
-        return "/profile";
+        List<String> photos = temp.getPhotos();
+        model.addAttribute("profilePhoto", temp.getProfilePhoto());
+        if( photos.isEmpty()){
+            
+            model.addAttribute("photosList", temp.getProfilePhoto());
+        }else{
+            model.addAttribute("photosList", photos.subList(1, photos.size()));
+        }
+    
+        model.addAttribute("profile", temp);
+        return "reference_profile";
     }
     
     @PostMapping( value = "/save" , params = "action=save")
@@ -109,7 +100,6 @@ public class ProfileController {
         Optional<Profile> toUpdateProfile = profiles.findById(profile.getId());
         if(profileResult.hasErrors()){
             model.addAttribute("profile", profile);
-            //profileResult.reject(null, "Something is wrong!");
             return "profile";
         }
         if(toUpdateProfile.isPresent()){
@@ -118,12 +108,13 @@ public class ProfileController {
             profiles.save(tmp);
             
         }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This profile does not exist.");
+            model.addAttribute("message", "Something went wrong. This profile does not exist.");
             
         }
         
         return "redirect:/profile?success";
     }
+   
     
     
 }

@@ -119,8 +119,9 @@ public class PhotoController {
     
     
     @PostMapping("/savePhoto")
-    public String saveEmployee(@ModelAttribute("photo") PhotoFormData photo,
+    public String savePhoto(@ModelAttribute("photo") PhotoFormData photo,
                                RedirectAttributes attributes) {
+        
         Photo toEditPhoto = photoRepository.getReferenceById(photo.getId());
         Photo editedPhoto = photo.generateNewPhoto();
         log.info("photo to edit: " + toEditPhoto.getCreated() + " photo to edit: "+toEditPhoto.getProfile());
