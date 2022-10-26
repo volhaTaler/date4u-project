@@ -34,6 +34,7 @@ public class ProfileFormData {
     private int hornlength;
     private int gender;
     private Integer attractedToGender;
+    @Size(min=0, max=250, message="Please write something about yourself. Keep it short and easy.")
     private String description;
     private LocalDateTime lastseen;
     private List<String> photos;
@@ -179,6 +180,19 @@ public class ProfileFormData {
     
     public void setAge(int age) {
         this.age = age;
+    }
+    
+    
+    
+    private String getGenderString(int gender){
+        return Gender.getGenderString(gender);
+    }
+    
+    public String getGenderAsStr(){
+        return getGenderString(this.gender);
+    }
+    public String getAttractGenderAsStr(){
+        return getGenderString(this.attractedToGender);
     }
     
     
