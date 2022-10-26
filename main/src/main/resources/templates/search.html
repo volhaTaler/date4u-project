@@ -106,18 +106,18 @@
 
 
         </form>
-        <br><br>
-        <h3>The following Unicorns match: </h3>
-        <br><br>
-
 
 <!--        <form th:action="@{/search/result}" method="post">-->
             <div style="width:80%" th:border="1" th:align="center" class="table" th:if="${totalProfilesNumber} != null">
+                <br><br>
+                <h3>The following Unicorns match: </h3>
+                <hr>
+                <br><br>
                 <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
                 <div class="col-md-12 mx-auto" >
                     <div class="row">
                         <div class="col-md-1 mx-auto">
-                            #
+                            Nr.
                         </div>
                         <div class="col-md-2 mx-auto">
                             <h6>Photo</h6>
@@ -144,7 +144,7 @@
                             <input type="hidden" th:value="${profile.id}" name="id"/>
 
                             <div class="col-md-1 mx-auto">
-                                <p data-th-text="${it.count} +(${pageOfProfiles.size()}* (${currentPage}-1))">
+                                <p data-th-text="${it.count} +(${filter.output_size} * (${currentPage}-1))">
                                     COUNTER</p>
                             </div>
                             <div class="col-md-2 mx-auto" th:align="center">
@@ -207,17 +207,26 @@
                 <br><br>
                 <div >
                     <a href="../profile.html" th:href="@{/profile}" class="btn btn-secondary">Go to My Profile</a>
-                    <br><br><br><br><br><br>
+                    <br><br><br>
                 </div>
             </footer>
 
     </div>
-
-
-    </div>
-
-
+    <footer>
+        <br><br>
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+            <div class="container-fluid">
+                <div class="navbar-nav">
+                    <a class="navbar-brand" href="#">Date4u</a>
+                    <a class="nav-link nav-item" th:href="@{/gallery}">My Gallery</a>
+                    <a class="nav-link nav-item" th:href="@{/search}">Search</a>
+                    <a class="nav-item nav-link" th:href="@{/logout}">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </footer>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

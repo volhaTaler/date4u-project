@@ -64,8 +64,8 @@ public class Date4uWebController {
     @GetMapping( "/search"  )
     public String searchPage(Model model,
                              @ModelAttribute("filter") FilterFormData filter,
-                             @RequestParam(defaultValue="1") int page,
                              @RequestParam(defaultValue = "5") int size,
+                             @RequestParam(defaultValue="1") int page,
                              Authentication auth){
 
         log.info("number of page: " + page + " , Input parameters: " + filter.getGender() + " and: " + filter.getMaxAge() +  " and: " + filter.getMinAge() );
@@ -84,6 +84,7 @@ public class Date4uWebController {
         }
        
         List<ProfileFormData> listOfProfileDTO = profileService.convertProfileToProfileDTO(pagesOfProfiles.getContent());
+        log.info("list of profiles: " + (listOfProfileDTO.size()* page-1));
         model.addAttribute("pageOfProfiles", listOfProfileDTO);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
