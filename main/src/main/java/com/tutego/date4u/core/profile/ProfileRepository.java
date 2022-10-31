@@ -1,6 +1,8 @@
 package com.tutego.date4u.core.profile;
 
 import jakarta.persistence.Tuple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +16,7 @@ import java.util.List;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long>{
     
+    
     @Query( nativeQuery = true, value = """
   SELECT YEAR(lastseen) AS y, MONTH(lastseen) AS m, COUNT(*) AS count
   FROM profile
@@ -21,84 +24,48 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
     List<Tuple> findMonthlyProfileCount();
     
     
-    Page<Profile> findProfileByBirthdateAndHornlengthAndIdNot(
-            @Param("startDate")LocalDate startDate,
-            @Param("minHornlength") int minHornlength,
-            @Param("ownId") long ownId,
-            Pageable pageable
-    );
+    @Query(value = """
+         SELECT p FROM Profile as p WHERE
+         (:nickname is null or p.nickname like %:nickname% ) and
+         (p.hornlength >= :minHornlength) and
+         (p.hornlength <= :maxHornlength) and
+         (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
+         (:gender is null or p.gender = :gender ) and
+         (p.attractedToGender is null or p.attractedToGender = :attractedToGender )
+         """
+    )
+    Page<Profile> findAllProfilesByThreeParams(
+                                                String nickname,
+                                                int minHornlength,
+                                                int maxHornlength,
+                                                LocalDate minAgeAsDate,
+                                                LocalDate maxAgeAsDate,
+                                                Byte gender,
+                                                Integer attractedToGender,
+                                                
+                                                Pageable pageable);
     
-    Page<Profile> findProfileByBirthdateBetweenAndHornlengthAndIdNot(
-            @Param("startDate")LocalDate startDate,
-            @Param("endDate")LocalDate endDate,
-            @Param("minHornlength") int minHornlength,
-            @Param("ownId") long ownId,
-            Pageable pageable
-    );
-    Page<Profile> findProfileByBirthdateAndHornlengthBetweenAndIdNot(
-            @Param("startDate")LocalDate startDate,
-            @Param("minHornlength") int minHornlength,
-            @Param("maxHornlength") int maxHornlength,
-            @Param("ownId") long ownId,
-            Pageable pageable
-    );
-    Page<Profile> findProfileByBirthdateBetweenAndHornlengthBetweenAndIdNot(
-            @Param("startDate")LocalDate startDate,
-            @Param("endDate")LocalDate endDate,
-            @Param("minHornlength") int minHornlength,
-            @Param("maxHornlength") int maxHornlength,
-            @Param("ownId") long ownId,
-            Pageable pageable
-    );
     
-    Page<Profile> findProfileByGenderAndBirthdateAndHornlengthAndIdNot(
-            @Param("gender") long gender,
-            @Param("startDate")LocalDate startDate,
-            @Param("minHornlength") int minHornlength,
-            @Param("ownId") long ownId,
-            Pageable pageable
-    );
-    
-    Page<Profile> findProfileByGenderAndBirthdateBetweenAndHornlengthAndIdNot(
-            @Param("gender") long gender,
-            @Param("startDate")LocalDate startDate,
-            @Param("endDate")LocalDate endDate,
-            @Param("minHornlength") int minHornlength,
-            @Param("ownId") long ownId,
-            Pageable pageable
-    );
-  
-    Page<Profile> findProfileByGenderAndBirthdateAndHornlengthBetweenAndIdNot(
-            @Param("gender") long gender,
-            @Param("startDate")LocalDate startDate,
-            @Param("maxHornlength") int maxHornlength,
-            @Param("minHornlength") int minHornlength,
-            @Param("ownId") long ownId,
-            Pageable pageable
-    );
-    
-    Page<Profile> findProfileByGenderAndBirthdateBetweenAndHornlengthBetweenAndIdNot(
-            @Param("gender") long gender,
-            @Param("startDate")LocalDate startDate,
-            @Param("endDate")LocalDate endDate,
-            @Param("maxHornlength") int maxHornlength,
-            @Param("minHornlength") int minHornlength,
-            @Param("ownId") long ownId,
-            Pageable pageable
-    );
-    
-//
-//    Page<Profile> findProfileByBirthdateBetweenAndGenderAndIdNot(
-//            @Param("startDate")LocalDate startDate,
-//            @Param("endDate")LocalDate endDate,
-//            @Param("gender") long gender,
-//          Pageable pageable
-//            );
-//    Page<Profile> findProfileByBirthdateBetween(
-//            @Param("startDate")LocalDate startDate,
-//            @Param("endDate")LocalDate endDate,
-//             Pageable pageable
-//    );
+    @Query(value = """
+         SELECT p FROM Profile as p WHERE
+         (p.id <> :ownId) and
+         (:nickname is null or p.nickname like %:nickname% ) and
+         (p.hornlength >= :minHornlength) and
+         (p.hornlength <= :maxHornlength) and
+         (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
+         (:gender is null or p.gender = :gender )
+         """
+    )
+    Page<Profile> findAllProfilesBySearchParams(
+            long ownId,
+            String nickname,
+            int minHornlength,
+            int maxHornlength,
+            LocalDate minAgeAsDate,
+            LocalDate maxAgeAsDate,
+            Byte gender,
+            Pageable pageable);
+
     
   
 }

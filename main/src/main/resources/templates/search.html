@@ -39,76 +39,78 @@
     </nav>
     <div class="jumbotron">
         </br>
-        <h1 class="display-4" th:align="center">Find Your Destiny </h1>
-        </br></br>
-        <form th:action="@{/search}" th:object="${filter}" method="get">
-            <div class="flex-content" style="width: 90%">
-                <div class="row justify-content-around">
-                    <div class="col" th:align="center">
-                        <label for="gender" class="form-label"> Gender</label>
-                        <select data-th-field="*{gender}" id="gender">
-                            <option th:value="0" th:text="Other"></option>
-                            <option th:value="1" th:text="Male"></option>
-                            <option th:value="2" th:text="Female"></option>
-                            <option th:value="3" th:text="All"></option>
+        <div class="card">
+            <div class="card-header">
+                <h1 class="display-4" th:align="center" style="width: 85%">Find Your Destiny </h1>
+                </br></br>
 
-                        </select>
+                <form th:action="@{/search}" th:object="${filter}" method="get">
+                    <div class="flex-content" style="width: 85%">
+                        <div class="row justify-content-around">
+                            <div class="col" th:align="center">
+                                <label for="gender" class="form-label"> Gender</label>
+                                <select data-th-field="*{gender}" id="gender">
+                                    <option th:value="0" th:text="Other"></option>
+                                    <option th:value="1" th:text="Male"></option>
+                                    <option th:value="2" th:text="Female"></option>
+                                    <option th:value="3" th:text="All"></option>
 
-                    </div>
-                    <div class="col" th:align="center">
-                        <label for="minAge" class="form-label"> Partner older than</label>
-                        <select th:field="${filter.minAge}" id="minAge">
-                            <option th:each="i : ${#numbers.sequence(18, 100)}" th:value="${i}" th:text="${i}">
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col" th:align="center">
-                        <label for="maxAge" class="form-label">Partner younger than</label>
-                        <select th:field="${filter.maxAge}" id="maxAge">
-                            <option th:each="j : ${#numbers.sequence(18, 100)}" th:value="${j}" th:text="${j}">
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col" th:align="center">
-                        <label for="minLength" class="form-label"> With Hornlength From</label>
-                        <select th:field="${filter.minHornlength}" id="minLength">
-                            <option th:each="minh : ${#numbers.sequence(0, 100)}" th:value="${minh}"
-                                    th:text="${minh}">
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col" th:align="center">
-                        <label for="maxLength" class="form-label"> With Hornlength To</label>
-                        <select th:field="${filter.maxHornlength}" id="maxLength">
-                            <option th:each="maxh : ${#numbers.sequence(0, 100)}" th:value="${maxh}"
-                                    th:text="${maxh}">
-                            </option>
-                        </select>
+                                </select>
+
+                            </div>
+                            <div class="col" th:align="center">
+                                <label for="minAge" class="form-label"> Partner older than</label>
+                                <select th:field="${filter.minAge}" id="minAge">
+                                    <option th:each="i : ${#numbers.sequence(18, 100)}" th:value="${i}" th:text="${i}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col" th:align="center">
+                                <label for="maxAge" class="form-label">Partner younger than</label>
+                                <select th:field="${filter.maxAge}" id="maxAge">
+                                    <option th:each="j : ${#numbers.sequence(18, 100)}" th:value="${j}" th:text="${j}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col" th:align="center">
+                                <label for="minLength" class="form-label"> With Hornlength From</label>
+                                <select th:field="${filter.minHornlength}" id="minLength">
+                                    <option th:each="minh : ${#numbers.sequence(0, 50)}" th:value="${minh}"
+                                            th:text="${minh}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col" th:align="center">
+                                <label for="maxLength" class="form-label"> With Hornlength To</label>
+                                <select th:field="${filter.maxHornlength}" id="maxLength">
+                                    <option th:each="maxh : ${#numbers.sequence(50, 0)}" th:value="${maxh}"
+                                            th:text="${maxh}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                </div>
 
+                    <div class="flex-content" style="width: 90%">
+                        <div class="row justify-content-around">
+                            <div class="col-md-6 mx-auto" th:align="center">
+                                <a th:href="@{/reset}"
+                                   class="btn btn-info">Reset </a>
+                            </div>
+                            <div class="col-md-6 mx-auto" th:align="center">
+                                <button type="submit" class="btn btn-primary">Search</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
             </div>
-            <div class="flex-content" style="width: 80%">
-                <div class="row justify-content-around">
-                    <div class="col-md-6 mx-auto" th:align="center">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                    </div>
-                    <div class="col-md-6 mx-auto" th:align="center">
-                    <a th:href="@{/reset}"
-                       class="btn btn-info">Reset </a>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-        </form>
+        </div>
 
 <!--        <form th:action="@{/search/result}" method="post">-->
-            <div style="width:80%" th:border="1" th:align="center" class="table" th:if="${totalProfilesNumber} != null">
+            <div style="width:90%" th:border="1" th:align="center" class="table" th:if="${totalProfilesNumber} != null">
                 <br><br>
                 <h3>The following Unicorns match: </h3>
                 <hr>
@@ -144,7 +146,7 @@
                             <input type="hidden" th:value="${profile.id}" name="id"/>
 
                             <div class="col-md-1 mx-auto">
-                                <p data-th-text="${it.count} +(${filter.output_size} * (${currentPage}-1))">
+                                <p data-th-text="${it.count} +(${filter.outputSize} * (${currentPage}-1))">
                                     COUNTER</p>
                             </div>
                             <div class="col-md-2 mx-auto" th:align="center">
@@ -182,6 +184,7 @@
                 </div>
 <!--                <span th:if="${msg != null}" th:text="${msg}"></span>-->
             </div>
+             <hr>
 
             <footer style="font-size: large" class="panel-footer" th:align="center">
 
@@ -194,7 +197,7 @@
                             <div class="col-md-6 mx-auto" th:align="center">
                                 <span th:each="i: ${pageNumbers}">
                                     <div class="btn btn-default">
-                                        <a th:href="@{/search(size=${5}, page=${i})}" th:class="${i==currentPage}  ?' ': 'active'" >[[${i}]]</a>
+                                        <a th:href="@{/search(size=${filter.outputSize}, page=${i})}" th:class="${i==currentPage}  ?' ': 'active'" >[[${i}]]</a>
                         <!--                    [[${i}]]   th:style="${i==currentPage}  ?'background-color: #cf84d0;': 'background-color: #668;'"-->
                                     </div>
                                 </span>

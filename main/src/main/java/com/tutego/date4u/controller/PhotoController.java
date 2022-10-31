@@ -3,7 +3,7 @@ package com.tutego.date4u.controller;
 import com.tutego.date4u.core.dto.PhotoFormData;
 import com.tutego.date4u.core.photo.Photo;
 import com.tutego.date4u.core.photo.PhotoRepository;
-import com.tutego.date4u.core.photo.PhotoService;
+import com.tutego.date4u.service.PhotoService;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
 import com.tutego.date4u.core.profile.UnicornRepository;

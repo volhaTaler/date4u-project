@@ -1,11 +1,10 @@
 package com.tutego.date4u.controller;
 
-import com.tutego.date4u.core.config.CurrentUser;
+
 import com.tutego.date4u.core.dto.ProfileFormData;
 import com.tutego.date4u.core.dto.UnicornFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
-import com.tutego.date4u.core.profile.Unicorn;
 import com.tutego.date4u.core.profile.UnicornRepository;
 import com.tutego.date4u.service.ProfileService;
 import com.tutego.date4u.service.UnicornService;
@@ -25,30 +24,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Optional;
-
+;import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 
 @Controller
 public class LoginController {
     
-    @Autowired
-    private final UnicornRepository unicorns;
-    
-    @Autowired
-    private final ProfileRepository profiles;
-    
-    @Autowired
-    private ProfileService profileService;
+    public static final int AGE_LIMIT = 18;
+   
     @Autowired
     private UnicornService unicornService;
     
     private final Logger log = LoggerFactory.getLogger(getClass());
     
-    public LoginController(UnicornRepository unicorns, ProfileRepository profiles) {
-        this.unicorns = unicorns;
-        this.profiles = profiles;
+    public LoginController() {
+    
     }
     
 //    @RequestMapping( "/" )
@@ -72,12 +63,18 @@ public class LoginController {
         return "redirect:/login?logout";
     }
     
+    /**
+     *
+     * @param model stores properties of Java DTO objects to provide them to the frontend.
+     * @return html page for registration
+     */
     @GetMapping("/registration")
     public String register(Model model) {
         UnicornFormData user = new UnicornFormData();
         ProfileFormData userProfile = new ProfileFormData();
         model.addAttribute("user", user);
         model.addAttribute("userProfile", userProfile);
+        model.addAttribute("ageLimit", LocalDate.now().minus(AGE_LIMIT, ChronoUnit.YEARS));
         return "registration";
     }
     
@@ -107,9 +104,6 @@ public class LoginController {
         // create accounts
         UnicornFormData userUnicorn = new UnicornFormData(user.getPassword(), user.getEmail());
         Profile userProfile = profile.generateNewProfile();
-//        Profile justCreated = profiles.save(userProfile);
-//        Unicorn unicornToCreate = userUnicorn.generateNewUnicorn(justCreated);
-//        unicorns.save(unicornToCreate);
         return "redirect:/registration?success";
     }
 }

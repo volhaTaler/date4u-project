@@ -1,21 +1,14 @@
 package com.tutego.date4u.core.photo;
 
-import com.tutego.date4u.core.FileSystem;
-import org.assertj.core.api.InstanceOfAssertFactories;
+import com.tutego.date4u.interfaces.shell.FileSystem;
+import com.tutego.date4u.service.PhotoService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
-import java.time.Year;
 import java.util.Base64;
-import java.util.Set;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +29,8 @@ class PhotoServiceTest {
   //  @Spy AwtBicubicThumbnail thumbnail;
   //  @InjectMocks PhotoService photoService;
   @MockBean FileSystem fs;
-  @Autowired PhotoService photoService;
+  @Autowired
+  PhotoService photoService;
 
   @BeforeEach
   void init() {

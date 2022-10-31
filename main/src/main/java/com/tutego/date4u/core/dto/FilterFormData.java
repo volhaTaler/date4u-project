@@ -1,17 +1,19 @@
 package com.tutego.date4u.core.dto;
 
+/**
+ * This class stores search parameters entered by user and provides them to the backend.
+ */
 public class FilterFormData {
     
-    
     private int OUTPUT_SIZE = 5;
-    public int DEFAULT_GENDER = (int)Gender.ALL.getGender();
+    public byte DEFAULT_GENDER = (byte)Gender.ALL.getGender();
     public final int MIN_AGE = 18;
     public final int MAX_AGE = 99;
     public final int MIN_HORNLEN = 0;
-    public final int MAX_HORNLEN = 100;
-    private int gender;
+    public final int MAX_HORNLEN = 50;
+    private byte gender;
     
-    private int output_size;
+    private int outputSize;
     
     private int attractedToGender;
     
@@ -28,15 +30,15 @@ public class FilterFormData {
         this.maxAge = MAX_AGE;
         this.minHornlength = MIN_HORNLEN;
         this.maxHornlength = MAX_HORNLEN;
-        this.output_size = OUTPUT_SIZE;
+        this.outputSize = OUTPUT_SIZE;
     
     }
     
-    public int getGender() {
+    public byte getGender() {
         return gender;
     }
     
-    public void setGender(int gender) {
+    public void setGender(byte gender) {
         this.gender = gender;
     }
     
@@ -72,12 +74,12 @@ public class FilterFormData {
         this.maxHornlength = maxHornlength;
     }
     
-    public int getOutput_size() {
-        return output_size;
+    public int getOutputSize() {
+        return outputSize;
     }
     
-    public void setOutput_size(int output_size) {
-        this.output_size = output_size;
+    public void setOutputSize(int outputSize) {
+        this.outputSize = outputSize;
     }
     
     public int getAttractedToGender() {

@@ -2,12 +2,13 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.0/dist/quartz/bootstrap.min.css">
+<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
-  <!-- Vanilla Datepicker CSS -->
-  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker.min.css'>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 
   <style>
     .form-label{
@@ -69,16 +70,17 @@
             </div>
 
             <div class="form-group mb-3">
-              <label class="form-label">Date of Birth</label>
+              <label for="datepicker" class="form-label">Date of Birth</label>
 
-              <input
-                      class="form-control"
-                      id="birthdate"
-                      name="birthdate"
-                      placeholder="Example: 2002-12-12"
-                      th:field="${userProfile.birthdate}"
-                      type="text"
-              />
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <div class="input-group date" >
+                    <input type="date" class="form-control"  th:field="${userProfile.birthdate}"
+                           th:attr="max=${#temporals.format(ageLimit, 'yyyy-MM-dd')}" id="datepicker">
+                  </div>
+                </div>
+              </div>
+
               <p th:errors = "${userProfile.birthdate}" class="text-warning"
                  th:if="${#fields.hasErrors('userProfile.birthdate')}"></p>
             </div>
@@ -103,14 +105,6 @@
               <option th:value="1" th:text="Male"></option>
 
             </select>
-<!--            <input-->
-<!--                    class="form-control"-->
-<!--                    id="genderString"-->
-<!--                    name="genderString"-->
-<!--                    placeholder="Other"-->
-<!--                    th:field="${userProfile.genderString}"-->
-<!--                    type="text"-->
-<!--            />-->
                           <p th:errors = "${userProfile.gender}" class="text-warning"
                              th:if="${#fields.hasErrors('userProfile.gender')}"></p>
           </div>
@@ -125,7 +119,7 @@
                           <p th:errors = "${userProfile.attractedToGender}" class="text-warning"
                              th:if="${#fields.hasErrors('userProfile.attractedToGender')}"></p>
           </div>
-          <div class="form-group mb-3">
+          <div class="form-group mb-4">
             <label class="form-label">Description</label>
             <input
                     class="form-control"
@@ -176,7 +170,22 @@
     </div>
   </div>
 </div>
+<!--<script type="text/javascript">-->
+<!--  let date = new Date();-->
+<!--  date.setFullYear(date.getFullYear() - 18);-->
+<!--  date.setMonth(11);-->
+<!--  date.setDate(31);-->
 
+<!--  document.getElementById("#datepicker").value = date;-->
+
+
+<!--  $(function() {-->
+<!--    $('#datepicker').datepicker({-->
+<!--      format: 'yyyy-MM-dd',-->
+<!--      endDate: date-->
+<!--    });-->
+<!--  });-->
+<!--</script>-->
 </body>
 </html>
 

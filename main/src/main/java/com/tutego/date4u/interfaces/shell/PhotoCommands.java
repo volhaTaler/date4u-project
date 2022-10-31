@@ -1,6 +1,6 @@
 package com.tutego.date4u.interfaces.shell;
 
-import com.tutego.date4u.core.photo.PhotoService;
+import com.tutego.date4u.service.PhotoService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
