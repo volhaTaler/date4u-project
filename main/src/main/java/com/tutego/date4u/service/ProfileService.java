@@ -66,8 +66,19 @@ public class ProfileService {
         return profiles.stream().map(ProfileFormData::createPFD).toList();
     }
     
-    
+    /**
+     *
+     * @param id of the authorized user to filter this pofile from the search results.
+     * @return optional of type Profile. If current user is not found that this is a problem. it must be always found.
+     */
     public Optional<Profile> getProfilesById(long id) {
         return profiles.findById(id);
     }
+    public int getMyLikes(Profile profile){
+        
+        return profile.getProfilesThatLikeMe().size();
+        
+    }
+    
+    
 }
