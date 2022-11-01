@@ -24,6 +24,7 @@ public class FilterFormData {
     private int minHornlength;
     private int maxHornlength;
     
+    
     public FilterFormData(){
         this.gender = DEFAULT_GENDER;
         this.minAge = MIN_AGE;

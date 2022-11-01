@@ -46,7 +46,7 @@ public class Profile {
   @OneToMany( mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<Photo> photos = new ArrayList<>();
 
-  @ManyToMany( fetch = FetchType.LAZY )
+  @ManyToMany( fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinTable(
       name = "Likes",
       joinColumns = @JoinColumn( name = "liker_fk" ),
@@ -54,7 +54,7 @@ public class Profile {
   )
   private Set<Profile> profilesThatILike = new HashSet<>();
 
-  @ManyToMany( fetch = FetchType.LAZY )
+  @ManyToMany( fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinTable(
       name = "Likes",
       joinColumns = @JoinColumn( name = "likee_fk" ),
@@ -170,8 +170,7 @@ public class Profile {
   }
   
   public void deletePhoto( Photo photo){
-//    photos.sort((p1, p2) -> (p1.getCreated().isBefore(p2.getCreated()))? 1: -1);
-//    if(!photos.get(0).isProfilePhoto())
+
     if(photos.contains(photo)) {
       photos.remove(photo);
     }else{

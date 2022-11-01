@@ -5,6 +5,7 @@ import com.tutego.date4u.core.config.CurrentUser;
 import com.tutego.date4u.core.dto.ProfileFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
+import com.tutego.date4u.service.ProfileService;
 import com.tutego.date4u.service.UnicornService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ public class ProfileController {
     
     @Autowired
     private final ProfileRepository profiles;
+    @Autowired
+    private ProfileService profileService;
     
     @Autowired
     private UnicornService unicornService;
@@ -65,7 +68,9 @@ public class ProfileController {
             profiles.save(currentProfile.get());
             ProfileFormData pfd = ProfileFormData.createPFD(temp);
             List<String> photos = pfd.getPhotos();
+            model.addAttribute("givenLike", true);
             model.addAttribute("profilePhoto", pfd.getProfilePhoto());
+            model.addAttribute("myLikes", profileService.getMyLikes(temp));
             if (photos.isEmpty()) {
                 model.addAttribute("photosList", pfd.getProfilePhoto());
             } else {

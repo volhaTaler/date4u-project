@@ -1,8 +1,6 @@
 package com.tutego.date4u.core.profile;
 
 import jakarta.persistence.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 public interface ProfileRepository extends JpaRepository<Profile, Long>{
@@ -44,6 +43,12 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
             LocalDate maxAgeAsDate,
             Byte gender,
             Pageable pageable);
+    
+    @Query("SELECT p FROM Profile p LEFT JOIN FETCH p.profilesThatILike WHERE p.id = (:id)")
+    public Profile findByIdAndFetchLikee(@Param("id") Long id);
+    
+    @Query("SELECT p FROM Profile p LEFT JOIN FETCH p.profilesThatLikeMe WHERE p.id = (:id)")
+    public Profile findByIdAndFetchLiker(@Param("id") Long id);
 
     
   

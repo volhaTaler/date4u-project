@@ -16,7 +16,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ProfileFormData {
     
@@ -140,9 +142,7 @@ public class ProfileFormData {
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
-//    public void setProfilePhoto(String profilePhoto) {
-//        this.profilePhoto = profilePhoto;
-//    }
+
     
     public String getProfilePhoto(){
         if(photos.isEmpty()){

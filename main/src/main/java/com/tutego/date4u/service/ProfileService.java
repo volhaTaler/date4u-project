@@ -1,10 +1,14 @@
 package com.tutego.date4u.service;
 
+import com.tutego.date4u.core.config.CurrentUser;
 import com.tutego.date4u.core.dto.FilterFormData;
 import com.tutego.date4u.core.dto.Gender;
 import com.tutego.date4u.core.dto.ProfileFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +16,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 
 
 @Service
@@ -79,6 +84,32 @@ public class ProfileService {
         return profile.getProfilesThatLikeMe().size();
         
     }
+    
+    @Transactional
+    public boolean isLikedByThisProfile(Profile currentProfile, Profile referencedProfile){
+        Profile refProfile = profiles.findByIdAndFetchLiker(referencedProfile.getId());
+         return refProfile.getProfilesThatLikeMe().contains(currentProfile);
+    }
+    
+    /** because of bidirectional relationship and cascade type persist, we may store likes only from one direction
+     *
+     * @param like parameter provides information whether the logged-in user has clicked on teh like button
+     * @param ownProfile the profile of the logged-in user
+     * @param referencedProfile the profile of the user that the logged-in user is currently visiting
+     */
+    @Transactional
+    public void updateLike(boolean like, Profile ownProfile, Profile referencedProfile){
+        Profile refProfile = profiles.findByIdAndFetchLiker(referencedProfile.getId());
+        if(like && !refProfile.getProfilesThatLikeMe().contains(ownProfile)) {
+            refProfile.getProfilesThatLikeMe().add(ownProfile);
+            profiles.save(refProfile);
+        }else if(!like && refProfile.getProfilesThatLikeMe().contains(ownProfile)){
+            refProfile.getProfilesThatLikeMe().remove(ownProfile);
+            profiles.save(refProfile);
+        }
+    }
+    
+    
     
     
 }

@@ -120,16 +120,16 @@ public class SearchController {
      * @param auth required to filter out from the results a profile of the logged-in user.
      * @return an option of with an id of the logged-in user profile.
      */
+
     private Optional<Long> getOwnId(Authentication auth) {
         CurrentUser unicorn = null;
-        
+    
         if (auth != null) {
             unicorn = (CurrentUser) auth.getPrincipal();
             return Optional.of(unicorn.getProfile().getId());
         }
-        
+    
         return Optional.empty();
     }
-    
     
 }

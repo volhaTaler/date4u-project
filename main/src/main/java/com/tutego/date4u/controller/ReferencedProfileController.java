@@ -1,28 +1,26 @@
 package com.tutego.date4u.controller;
 
 import com.tutego.date4u.core.config.CurrentUser;
-import com.tutego.date4u.core.dto.LikesFormData;
 import com.tutego.date4u.core.dto.ProfileFormData;
 import com.tutego.date4u.core.profile.Profile;
-import com.tutego.date4u.core.profile.ProfileRepository;
 import com.tutego.date4u.service.ProfileService;
-import com.tutego.date4u.service.UnicornService;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +43,7 @@ public class ReferencedProfileController {
     
     @RequestMapping("/profile/{id}")
     public String profilePage(@PathVariable("id") long id,
+                              Authentication auth,
                               Model model) {
         
         Optional<Profile> profile = profileService.getProfilesById(id);
@@ -54,7 +53,10 @@ public class ReferencedProfileController {
         ProfileFormData temp = ProfileFormData.createPFD(profile.get());
         int likes = profileService.getMyLikes(profile.get());
         List<String> photos = temp.getPhotos();
+        boolean givenLike = profileService.isLikedByThisProfile( getOwnProfile(auth).get(), profile.get());
+        log.info("given Like: " + givenLike);
         model.addAttribute("profilePhoto", temp.getProfilePhoto());
+        model.addAttribute("givenLike", givenLike);
         model.addAttribute("myLikes" , likes);
         if (photos.isEmpty()) {
             
@@ -67,6 +69,38 @@ public class ReferencedProfileController {
         return "reference_profile";
     }
     
+    @PostMapping("/profile/{id}/like")
+    public String profilePage(@PathVariable("id") long id,
+                              @RequestParam("givenLike") boolean givenLike,
+                              Authentication auth,
+                              Model model) {
+    log.info("in post method");
+        Optional<Profile> profile = profileService.getProfilesById(id);
+        if (profile.isEmpty()) {
+            return "redirect:/search?";
+        }
+        
+        if (getOwnProfile(auth).isEmpty()) {
+            return "/error";
+        }
+        log.info("received like: "  + givenLike);
+        profileService.updateLike(givenLike, getOwnProfile(auth).get(), profile.get());
+        model.addAttribute("givenLike", givenLike);
+        
+        return "redirect:/profile/{id}";
+    }
+    
+    
+    private Optional<Profile> getOwnProfile(Authentication auth) {
+        CurrentUser unicorn = null;
+        
+        if (auth != null) {
+            unicorn = (CurrentUser) auth.getPrincipal();
+            return Optional.of(unicorn.getProfile());
+        }
+        
+        return Optional.empty();
+    }
     
 }
 
