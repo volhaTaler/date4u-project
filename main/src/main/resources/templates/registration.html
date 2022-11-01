@@ -64,6 +64,7 @@
                       placeholder="Example: Nickname"
                       th:field="${userProfile.nickname}"
                       type="text"
+                      autocomplete="off"
               />
               <p th:errors = "${userProfile.nickname}" class="text-danger"
                  th:if="${#fields.hasErrors('userProfile.nickname')}"></p>
@@ -76,7 +77,7 @@
                 <div class="col-sm-4">
                   <div class="input-group date" >
                     <input type="date" class="form-control"  th:field="${userProfile.birthdate}"
-                           th:attr="max=${#temporals.format(ageLimit, 'yyyy-MM-dd')}" id="datepicker">
+                           th:attr="max=${#temporals.format(ageLimit, 'yyyy-MM-dd')}" id="datepicker"  autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -93,6 +94,7 @@
                     placeholder=""
                     th:field="${userProfile.hornlength}"
                     type="text"
+                    autocomplete="off"
             />
                           <p th:errors = "${userProfile.hornlength}" class="text-warning"
                              th:if="${#fields.hasErrors('userProfile.hornlength')}"></p>
@@ -128,6 +130,7 @@
                     placeholder="Example: I like to do this and that."
                     th:field="${userProfile.description}"
                     type="text"
+                    autocomplete="off"
             />
                           <p th:errors = "${userProfile.description}" class="text-warning"
                              th:if="${#fields.hasErrors('userProfile.description')}"></p>
@@ -142,6 +145,7 @@
                       placeholder="example@gmail.com"
                       th:field="${user.email}"
                       type="email"
+                      autocomplete="off"
               />
               <p th:errors = "${user.email}" class="text-danger"
                  th:if="${#fields.hasErrors('user.email')}"></p>

@@ -35,6 +35,8 @@
     <div class="jumbotron">
         <h1 class="display-4 ">My Profile</h1>
     </div>
+
+    </div>
     </br></br>
     <div data-th-object="${profile}">
         <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
@@ -52,13 +54,13 @@
                                 <div class="btn-sm-group" role="group" aria-label="Gender" data-th-field="*{gender}"
                                      id="genderInput">
                                     <input type="radio" data-th-field="*{gender}" class="btn-check" name="btnradio"
-                                           id="btnradio1" autocomplete="off" checked="" th:value="1">
+                                           id="btnradio1"  checked="" th:value="1">
                                     <label class="btn btn-outline-primary" for="btnradio1">Male</label>
                                     <input type="radio" data-th-field="*{gender}" class="btn-check" name="btnradio"
-                                           id="btnradio2" autocomplete="off" checked="" th:value="2">
+                                           id="btnradio2"  checked="" th:value="2">
                                     <label class="btn btn-outline-primary" for="btnradio2">Female</label>
                                     <input type="radio" data-th-field="*{gender}" class="btn-check" name="btnradio"
-                                           id="btnradio3" autocomplete="off" checked="" th:value="0">
+                                           id="btnradio3"  checked="" th:value="0">
                                     <label class="btn btn-outline-primary" for="btnradio3">Other</label>
                                 </div>
                             </div>
@@ -90,7 +92,11 @@
                             <div class="col">
                                 <label for="birthdateInput" class="form-label">Date of birth</label>
                                 <input type="text" data-th-field="*{birthdate}" id="birthdateInput"
-                                       class="form-control" readonly>
+                                       class="form-control" >
+                            </div>
+                            <div class="col">
+                                <label for="likesInput" class="form-label">My Likes</label>
+                                <p th:text="${myLikes}" id="likesInput" class="form-control">
                             </div>
                             <div class="col">
                                 <label for="hornlengthInput" class="form-label">Length of Horn</label>
@@ -103,11 +109,7 @@
                             <div class="col">
                                     <label for="descriptionArea" class="form-label mt-4">Description</label>
                                     <textarea class="form-control" data-th-field="*{description}"  id="descriptionArea" rows="3"></textarea>
-
-
-<!--                                <label for="descriptionInput" class="form-label">Description</label>-->
-<!--                                <input type="text" data-th-field="*{description}" id="descriptionInput"-->
-<!--                                       class="form-control">-->
+                                
                             </div>
                             <div class="col">
                                 <div class="d-grid gap-2">
