@@ -58,7 +58,7 @@
 
     <div style="width:80%" th:border="1" th:align="center" class="table">
         <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
-        <div class="col-md-9 mx-auto">
+        <div class="col-md-10 mx-auto">
             <div class="row align-items-center">
                 <div class="col-md-3 mx-auto">
                     <h5>Photo</h5>
@@ -69,7 +69,7 @@
                 <div class="col-md-2 mx-auto">
                     <h5>Created On</h5>
                 </div>
-                <div class="col-md-2 mx-auto">
+                <div class="col-md-3 mx-auto">
                     <h5>Profile Photo</h5>
                 </div>
                 <div class="col-md-2 mx-auto">
@@ -101,13 +101,14 @@
 
                     </div>
 
-                    <div class="col-md-2 mx-auto ">
-                            <label th:text="(${photo.profilePhoto} ?'Currrent profile photo': 'Make to profile photo')"> Current profile photo</label>
-                            <br><br>
-                        <div class="form-check">
-                            <input type="checkbox" th:disabled="(${photo.profilePhoto} ? 'disabled')" name="profilePhoto" id="profilePhoto"
-                                   th:checked="${photo.profilePhoto}" />
-                            </div>
+                    <div class="col-md-3 mx-auto ">
+                        <div class="form-check form-switch" th:align="right">
+                            <label class="form-check-label" th:text="(${photo.profilePhoto} ?'Currrent profile photo': 'Set this photo as profile')" th:align="center"> Current profile photo</label>
+                            <input class="form-check-input" type="checkbox" id="profilePhoto" th:checked="${photo.profilePhoto}"
+                                   th:disabled="(${photo.profilePhoto} ? 'disabled')" name="profilePhoto">
+<!--                            <input type="checkbox" th:disabled="(${photo.profilePhoto} ? 'disabled')" name="profilePhoto" id="profilePhoto"-->
+<!--                                   th:checked="${photo.profilePhoto}" />-->
+                        </div>
 
                     </div>
                     <div class="col-md-2 mx-auto">
