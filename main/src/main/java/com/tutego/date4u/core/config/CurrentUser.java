@@ -1,9 +1,8 @@
 package com.tutego.date4u.core.config;
 
-import com.tutego.date4u.core.profile.Unicorn;
+import com.tutego.date4u.core.unicorn.Unicorn;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;

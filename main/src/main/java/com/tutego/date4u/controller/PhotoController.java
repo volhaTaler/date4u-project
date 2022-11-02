@@ -6,7 +6,7 @@ import com.tutego.date4u.core.photo.PhotoRepository;
 import com.tutego.date4u.service.PhotoService;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
-import com.tutego.date4u.core.profile.UnicornRepository;
+import com.tutego.date4u.core.unicorn.UnicornRepository;
 import com.tutego.date4u.service.UnicornService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

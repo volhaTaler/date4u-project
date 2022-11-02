@@ -1,8 +1,8 @@
 package com.tutego.date4u.service;
 
 import com.tutego.date4u.core.profile.Profile;
-import com.tutego.date4u.core.profile.Unicorn;
-import com.tutego.date4u.core.profile.UnicornRepository;
+import com.tutego.date4u.core.unicorn.Unicorn;
+import com.tutego.date4u.core.unicorn.UnicornRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

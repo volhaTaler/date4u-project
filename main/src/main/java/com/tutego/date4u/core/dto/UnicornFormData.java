@@ -1,7 +1,7 @@
 package com.tutego.date4u.core.dto;
 
 import com.tutego.date4u.core.profile.Profile;
-import com.tutego.date4u.core.profile.Unicorn;
+import com.tutego.date4u.core.unicorn.Unicorn;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.Objects;

@@ -1,9 +1,8 @@
 package com.tutego.date4u.core.profile;
 
 import com.tutego.date4u.core.photo.Photo;
-import jakarta.validation.constraints.Min;
+import com.tutego.date4u.core.unicorn.Unicorn;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.lang.Nullable;
 

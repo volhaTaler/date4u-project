@@ -1,7 +1,7 @@
 package com.tutego.date4u.core.config;
 
-import com.tutego.date4u.core.profile.Unicorn;
-import com.tutego.date4u.core.profile.UnicornRepository;
+import com.tutego.date4u.core.unicorn.Unicorn;
+import com.tutego.date4u.core.unicorn.UnicornRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
