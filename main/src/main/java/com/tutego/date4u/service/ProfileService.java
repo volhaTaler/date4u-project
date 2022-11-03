@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
 
 
 @Service
@@ -83,6 +83,11 @@ public class ProfileService {
         
         return profile.getProfilesThatLikeMe().size();
         
+    }
+    
+    public void saveProfile(Profile updatedProfile){
+        
+        profiles.save(updatedProfile);
     }
     
     @Transactional

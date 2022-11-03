@@ -5,14 +5,11 @@ import com.tutego.date4u.core.photo.Photo;
 import com.tutego.date4u.core.photo.PhotoRepository;
 import com.tutego.date4u.service.PhotoService;
 import com.tutego.date4u.core.profile.Profile;
-import com.tutego.date4u.core.profile.ProfileRepository;
-import com.tutego.date4u.core.unicorn.UnicornRepository;
+import com.tutego.date4u.service.ProfileService;
 import com.tutego.date4u.service.UnicornService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -37,23 +34,21 @@ public class PhotoController {
     
     
     @Autowired
-    private final ProfileRepository profileRepository;
+    private ProfileService profileService;
     
     @Autowired
-    private final UnicornRepository unicornRepository;
+    private UnicornService unicornService;
+
     
     @Autowired
     private final PhotoRepository photoRepository;
-    UnicornService unicornService;
     private final PhotoService photoService;
     
     private final Logger log = LoggerFactory.getLogger( getClass() );
     
     
-    public PhotoController(PhotoService photos, ProfileRepository profileRepository, UnicornRepository unicornRepository, PhotoRepository photorepository) {
+    public PhotoController(PhotoService photos,PhotoRepository photorepository) {
         this.photoService = photos;
-        this.profileRepository = profileRepository;
-        this.unicornRepository = unicornRepository;
         this.photoRepository = photorepository;
     }
     
@@ -61,7 +56,6 @@ public class PhotoController {
     public String displayUploadForm(Model model, RedirectAttributes attributes){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        unicornService = new UnicornService(unicornRepository);
         Optional<Profile> profiletoUpdate = unicornService.getByNickname(currentPrincipalName);
 
         if(profiletoUpdate.isPresent()) {
@@ -78,12 +72,15 @@ public class PhotoController {
     public String deleteById(@PathVariable(value = "id") long id,
                              RedirectAttributes attributes) {
         Photo photo = photoRepository.getReferenceById(id);
-        Profile profile = profileRepository.getReferenceById(photo.getProfile().getId());
+        Optional<Profile> profileOptional = profileService.getProfilesById(photo.getProfile().getId());
+        if(profileOptional.isEmpty()){
+            return "/error";
+        }
+        Profile profile = profileOptional.get();
         // delete from the list
-       log.info("Number before delete: " +profile.getPhotos().size());
         profile.deletePhoto(photo);
         log.info("Number after delete: " +profile.getPhotos().size());
-        profileRepository.save(profile);
+        profileService.saveProfile(profile);
         
         photoRepository.deleteById(id);
         attributes.addFlashAttribute("message", "One photo was deleted.");
@@ -91,27 +88,6 @@ public class PhotoController {
         
     }
     
-//    @PostMapping("/savePhoto")
-//    public String saveEmployee(@ModelAttribute("photosList") List<Photo> photos, RedirectAttributes attributes) {
-//        if(photos.isEmpty()){
-//            attributes.addFlashAttribute("message", "The list of photos is empty: Nothing to save.");
-//            return "profile";
-//        }
-//        Profile profile = profileRepository.getReferenceById(photos.get(0).getProfile().getId());
-//        List<Photo> oldPhotos = profile.getPhotos();
-//        for (int i=0; i< oldPhotos.size(); i++)
-//        {
-//            if(!oldPhotos.get(i).equals(photos.get(i))){
-//                oldPhotos.remove(i);
-//                profile.add(photos.get(i));
-//                profileRepository.save(profile);
-//                photoRepository.save(photos.get(i));
-//            }
-//
-//        }
-//        attributes.addFlashAttribute("message", "Photos are updated");
-//        return "redirect:/profile";
-//    }
      @ModelAttribute("photo")
      public PhotoFormData setModelAttribute() {
         return new PhotoFormData();
@@ -126,7 +102,11 @@ public class PhotoController {
         Photo editedPhoto = photo.generateNewPhoto();
         log.info("photo to edit: " + toEditPhoto.getCreated() + " photo to edit: "+toEditPhoto.getProfile());
         if(!toEditPhoto.isProfilePhoto() && photo.isProfilePhoto()){
-            Profile profile = profileRepository.getReferenceById(toEditPhoto.getProfile().getId());
+            Optional<Profile> profileOptional = profileService.getProfilesById(toEditPhoto.getProfile().getId());
+            if(profileOptional.isEmpty()){
+                return "/error";
+            }
+            Profile profile = profileOptional.get();
             List<Photo> photos = profile.getPhotos();
             if(editedPhoto.isProfilePhoto()){
                 photos.get(0).setProfilePhoto(false);
@@ -135,7 +115,7 @@ public class PhotoController {
             toEditPhoto.setProfilePhoto(editedPhoto.isProfilePhoto());
             //toEditPhoto.setName(editedPhoto.getName());
             profile.add(toEditPhoto);
-            profileRepository.save(profile);
+            profileService.saveProfile(profile);
             photoRepository.save(toEditPhoto);
             attributes.addFlashAttribute("message", "Profile photo is updated");
         }else{
@@ -157,7 +137,6 @@ public class PhotoController {
         // add to the DB
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        unicornService = new UnicornService(unicornRepository);
         Optional<Profile> profiletoUpdate = unicornService.getByNickname(currentPrincipalName);
         StringBuilder fileNames = new StringBuilder();
         if(profiletoUpdate.isPresent()) {
@@ -170,7 +149,7 @@ public class PhotoController {
             
             profile.add(newPhoto);
     
-            profileRepository.save(profile);
+            profileService.saveProfile(profile);
         }
         
         model.addAttribute("msg", "Uploaded images: " + fileNames.toString());
@@ -178,42 +157,39 @@ public class PhotoController {
         return "redirect:profile?success";
     }
     
-    
-    
-    
-    
-    @GetMapping( path     = "/images/photos/{imagename}",
-            produces = MediaType.IMAGE_JPEG_VALUE )
-    public ResponseEntity<?> photo(@PathVariable("imagename") String imagename) {
-        return ResponseEntity.of(photoService.download( imagename ));
-    }
-   
-   
-    @PostMapping( "/profile/{id}/photos/" )
-    public ResponseEntity<?> saveImage( @PathVariable long id,
-                                        @RequestParam MultipartFile file) throws IOException {
-        Optional<Profile> profiletoUpdate = profileRepository.findById(id);
-        
-        if(profiletoUpdate.isPresent()){
-            Profile profile = profiletoUpdate.get();
-            
-            byte[] bytes = file.getBytes();
-            
-            String name = photoService.upload(bytes);
-            
-            Photo newPhoto = new Photo(null, profile,name,
-                    false, LocalDateTime.now().truncatedTo(TimeUnit.SECONDS.toChronoUnit()));
-            
-            profile.add(newPhoto);
-            
-            profileRepository.save(profile);
-            
-            return ResponseEntity.ok().build();
-            //created(URI.create("api/photos/" + name)).build();
-        }
-        
-        return ResponseEntity.notFound().build();
-    }
+//
+//    @GetMapping( path     = "/images/photos/{imagename}",
+//            produces = MediaType.IMAGE_JPEG_VALUE )
+//    public ResponseEntity<?> photo(@PathVariable("imagename") String imagename) {
+//        return ResponseEntity.of(photoService.download( imagename ));
+//    }
+//
+//
+//    @PostMapping( "/profile/{id}/photos/" )
+//    public ResponseEntity<?> saveImage( @PathVariable long id,
+//                                        @RequestParam MultipartFile file) throws IOException {
+//        Optional<Profile> profiletoUpdate = profileRepository.findById(id);
+//
+//        if(profiletoUpdate.isPresent()){
+//            Profile profile = profiletoUpdate.get();
+//
+//            byte[] bytes = file.getBytes();
+//
+//            String name = photoService.upload(bytes);
+//
+//            Photo newPhoto = new Photo(null, profile,name,
+//                    false, LocalDateTime.now().truncatedTo(TimeUnit.SECONDS.toChronoUnit()));
+//
+//            profile.add(newPhoto);
+//
+//            profileRepository.save(profile);
+//
+//            return ResponseEntity.ok().build();
+//            //created(URI.create("api/photos/" + name)).build();
+//        }
+//
+//        return ResponseEntity.notFound().build();
+//    }
 
     
     }

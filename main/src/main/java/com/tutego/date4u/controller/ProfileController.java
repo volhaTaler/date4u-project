@@ -29,8 +29,8 @@ import java.util.Optional;
 @Controller
 public class ProfileController {
     
-    @Autowired
-    private final ProfileRepository profiles;
+//    @Autowired
+//    private final ProfileRepository profiles;
     @Autowired
     private ProfileService profileService;
     
@@ -40,10 +40,10 @@ public class ProfileController {
     
     private final Logger log = LoggerFactory.getLogger(getClass());
     
-    public ProfileController(final ProfileRepository profiles) {
-        
-        this.profiles = profiles;
-    }
+//    public ProfileController(final ProfileRepository profiles) {
+//
+//        this.profiles = profiles;
+//    }
     
     /**
      * this function calls a page of the logged-in user in order to update the data.
@@ -58,14 +58,13 @@ public class ProfileController {
         CurrentUser unicorn = null;
         if (auth != null) {
             unicorn = (CurrentUser) auth.getPrincipal();
-            log.info(unicorn.getUsername() + ":  " + unicorn.getPassword());
             Optional<Profile> currentProfile = unicornService.getNicknameByEmail(unicorn.getUsername());
             if (currentProfile.isEmpty()) {
                 return "/login?logout";
             }
             Profile temp = currentProfile.get();
             currentProfile.get().setLastseen(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-            profiles.save(currentProfile.get());
+            profileService.saveProfile(currentProfile.get());
             ProfileFormData pfd = ProfileFormData.createPFD(temp);
             List<String> photos = pfd.getPhotos();
             model.addAttribute("givenLike", true);
@@ -90,8 +89,7 @@ public class ProfileController {
                               BindingResult profileResult,
                               RedirectAttributes redirectAttributes,
                               Model model) {
-        log.info("profile to string: " + profile.toString());
-        Optional<Profile> toUpdateProfile = profiles.findById(profile.getId());
+        Optional<Profile> toUpdateProfile = profileService.getProfilesById(profile.getId());
         if (profileResult.hasErrors()) {
             model.addAttribute("profile", profile);
             redirectAttributes.addFlashAttribute("message", "Some input was incorrect.");
@@ -100,7 +98,7 @@ public class ProfileController {
         if (toUpdateProfile.isPresent()) {
             Profile tmp = toUpdateProfile.get();
             profile.updateProfile(tmp);
-            profiles.save(tmp);
+            profileService.saveProfile(tmp);
             
         } else {
             redirectAttributes.addFlashAttribute("message", "Something went wrong. This profile does not exist.");
