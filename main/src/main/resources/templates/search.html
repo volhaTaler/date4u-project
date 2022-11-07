@@ -190,18 +190,19 @@
 
                 <div class="flex-content" style="width: 40%">
                     <div class="row justify-content-around">
-                        <div th:if="${totalPages > 0}" class="pagination">
+                        <div th:if="${totalProfilesNumber > 0}" class="pagination">
                             <div class="col-md-6 mx-auto" th:align="center">
-                                Found [[${totalProfilesNumber}]] Profiles : Page [[${currentPage}]] of [[${totalPages}]] :
+                                Found [[${totalProfilesNumber}]] Profiles
+<!--                                : Page [[${currentPage}]] of [[${totalPages}]] :-->
                             </div>
-                            <div class="col-md-6 mx-auto" th:align="center">
-                                <span th:each="i: ${pageNumbers}">
-                                    <div class="btn btn-default">
-                                        <a th:href="@{/search(size=${filter.outputSize}, page=${i})}" th:class="${i==currentPage}  ?' ': 'active'" >[[${i}]]</a>
-                        <!--                    [[${i}]]   th:style="${i==currentPage}  ?'background-color: #cf84d0;': 'background-color: #668;'"-->
-                                    </div>
-                                </span>
-                            </div>
+<!--                            <div class="col-md-6 mx-auto" th:align="center">-->
+<!--                                <span th:each="i: ${pageNumbers}">-->
+<!--                                    <div class="btn btn-default">-->
+<!--                                        <a th:href="@{/search(size=${filter.outputSize}, page=${i})}" th:class="${i==currentPage}  ?' ': 'active'" >[[${i}]]</a>-->
+<!--                        &lt;!&ndash;                    [[${i}]]   th:style="${i==currentPage}  ?'background-color: #cf84d0;': 'background-color: #668;'"&ndash;&gt;-->
+<!--                                    </div>-->
+<!--                                </span>-->
+<!--                            </div>-->
                         </div>
                     </div>
                 </div>

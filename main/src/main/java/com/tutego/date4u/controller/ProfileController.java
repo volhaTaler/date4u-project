@@ -29,8 +29,6 @@ import java.util.Optional;
 @Controller
 public class ProfileController {
     
-//    @Autowired
-//    private final ProfileRepository profiles;
     @Autowired
     private ProfileService profileService;
     
@@ -40,10 +38,6 @@ public class ProfileController {
     
     private final Logger log = LoggerFactory.getLogger(getClass());
     
-//    public ProfileController(final ProfileRepository profiles) {
-//
-//        this.profiles = profiles;
-//    }
     
     /**
      * this function calls a page of the logged-in user in order to update the data.

@@ -2,6 +2,7 @@ package com.tutego.date4u.controller;
 
 import com.tutego.date4u.core.config.CurrentUser;
 import com.tutego.date4u.core.dto.FilterFormData;
+import com.tutego.date4u.core.dto.PageDTO;
 import com.tutego.date4u.core.dto.ProfileFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.service.ProfileService;
@@ -84,34 +85,36 @@ public class SearchController {
         if (getOwnId(auth).isEmpty()) {
             return "error";
         }
-        Page<Profile> pagesOfProfiles =
-                profileService.findPaginated(PageRequest.of(page - 1, 5), filter, getOwnId(auth).get());
+//        Page<Profile> pagesOfProfiles =
+//                profileService.findPaginated(PageRequest.of(page - 1, 5), filter, getOwnId(auth).get());
+        PageDTO pageDTO =
+                profileService.findLimitedPage( filter, getOwnId(auth).get());
         
-        int totalPages = pagesOfProfiles.getTotalPages();
         
-        if (totalPages == 0) {
+        if (pageDTO.getTotalResults() == 0) {
             model.addAttribute("filter", filter);
             model.addAttribute("message", "No unicorn profiles were found based on the specified parameters.");
             return "search";
-        } else if (page > totalPages) {
-            model.addAttribute("message", "Invalid page number.");
-            return "search";
         }
+//        else if (page > totalPages) {
+//            model.addAttribute("message", "Invalid page number.");
+//            return "search";
+//        }
         
         List<ProfileFormData> listOfProfileDTO =
-                profileService.convertProfileToProfileDTO(pagesOfProfiles.getContent());
+                profileService.convertProfileToProfileDTO(pageDTO.getItems());
         model.addAttribute("pageOfProfiles", listOfProfileDTO);
         // required for paginated representation of results
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("totalProfilesNumber", pagesOfProfiles.getTotalElements());
+//        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalProfilesNumber", pageDTO.getTotalResults());
         
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+//        if (totalPages > 0) {
+//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
         
         return "search";
     }

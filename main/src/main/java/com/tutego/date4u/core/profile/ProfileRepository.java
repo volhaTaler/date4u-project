@@ -23,6 +23,90 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
     List<Tuple> findMonthlyProfileCount();
     
     
+    @Query(value = """
+         SELECT COUNT (p) FROM Profile as p WHERE
+         (p.id <> :ownId) and
+         (:nickname is null or p.nickname like %:nickname% ) and
+         (p.hornlength >= :minHornlength) and
+         (p.hornlength <= :maxHornlength) and
+         (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
+         (:gender is null or p.gender = :gender )
+         """
+    )
+    long countAllProfilesBySearchParams(
+            long ownId,
+            String nickname,
+            int minHornlength,
+            int maxHornlength,
+            LocalDate minAgeAsDate,
+            LocalDate maxAgeAsDate,
+            Byte gender);
+    
+    @Query(value = """
+         SELECT Top 5 * FROM Profile as p WHERE
+         (p.id <> :ownId) and
+         (:nickname is null or p.nickname like %:nickname% ) and
+         (p.hornlength >= :minHornlength) and
+         (p.hornlength <= :maxHornlength) and
+         (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
+         (:gender is null or p.gender = :gender )
+         ORDER BY p.id asc
+         """, nativeQuery = true
+    )
+    List<Profile> findFirstFiveProfilesBySearchParams(
+            long ownId,
+            String nickname,
+            int minHornlength,
+            int maxHornlength,
+            LocalDate minAgeAsDate,
+            LocalDate maxAgeAsDate,
+            Byte gender);
+    
+    @Query(value = """
+         SELECT Bottom 5 * FROM Profile as p WHERE
+         (p.id <> :ownId) and
+         (:nickname is null or p.nickname like %:nickname% ) and
+         (p.hornlength >= :minHornlength) and
+         (p.hornlength <= :maxHornlength) and
+         (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
+         (:gender is null or p.gender = :gender )
+         ORDER BY p.id asc
+         """, nativeQuery = true
+    )
+    List<Profile> findLastFiveProfilesBySearchParams(
+            long ownId,
+            String nickname,
+            int minHornlength,
+            int maxHornlength,
+            LocalDate minAgeAsDate,
+            LocalDate maxAgeAsDate,
+            Byte gender);
+    
+    @Query(value = """
+         SELECT * FROM Profile as p WHERE
+         (p.id <> :ownId) and
+         (p.id > :trackId) and
+         (:nickname is null or p.nickname like %:nickname% ) and
+         (p.hornlength >= :minHornlength) and
+         (p.hornlength <= :maxHornlength) and
+         (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
+         (:gender is null or p.gender = :gender )
+         ORDER BY p.id asc LIMIT :limit
+         """, nativeQuery = true
+    )
+    List<Profile> findProfilesBySearchParamsAndLimit(
+            long ownId,
+            long trackId,
+            String nickname,
+            int minHornlength,
+            int maxHornlength,
+            LocalDate minAgeAsDate,
+            LocalDate maxAgeAsDate,
+            Byte gender,
+            int limit);
+    
+    
+    
     
     @Query(value = """
          SELECT p FROM Profile as p WHERE
