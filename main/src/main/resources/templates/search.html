@@ -98,9 +98,8 @@
                                 <a th:href="@{/reset}"
                                    class="btn btn-info">Reset </a>
                             </div>
-                            <div class="col-md-6 mx-auto" th:align="center" th:da>
-                                <button type="submit"
-                                         class="btn btn-primary">Search</button>
+                            <div class="col-md-6 mx-auto" th:align="center">
+                                <button type="submit" class="btn btn-primary">Search</button>
 
                             </div>
                         </div>
@@ -110,11 +109,11 @@
             </div>
         </div>
 
-
-            <div style="width:90%" th:border="1" th:align="center" class="table" th:if="${totalProfilesNumber != null and totalProfilesNumber> 0}">
+<!--        <form th:action="@{/search/result}" method="post">-->
+            <div style="width:90%" th:border="1" th:align="center" class="table" th:if="${totalProfilesNumber} != null">
                 <br><br>
                 <h3>The following Unicorns match: </h3>
-<!--                <hr>-->
+                <hr>
                 <br><br>
                 <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
                 <div class="col-md-12 mx-auto" >
@@ -139,7 +138,7 @@
                         </div>
                     </div>
 
-                    <div data-th-each="profile: ${pageOfProfiles}">
+                    <div data-th-each="profile : ${pageOfProfiles}">
                         <div class="row">
                             <input type="hidden" th:value="${profile.id}" name="id"/>
 
@@ -177,9 +176,9 @@
                     </div>
                 </div>
             </div>
-        <div th:unless="${totalProfilesNumber > 0}" class="flex-content">
+            <div th:unless="${totalProfilesNumber > 0}" class="flex-content" style="width: 90%">
             <div class="row justify-content-around" th:align="center">
-                <img th:src="@{'/images/img/sad_unicorn.jpg'}" style="width: 50%; height: 50%;
+                <img th:src="@{'/images/img/sad_unicorn.jpg'}" style="width: 40%; height: 40%;
                 padding-top: 20px; padding-bottom: 20px;"
                      alt="No Matches Found" >
                 <br><br>
@@ -194,31 +193,25 @@
                 <div class="flex-content" style="width: 40%">
                     <div class="row justify-content-around">
                         <div th:if="${totalProfilesNumber > 0}" class="pagination">
-
-
                             <div class="col-md-6 mx-auto" th:align="center">
-                                Found About [[${totalProfilesNumber}]] Profiles:
+                                Found About [[${totalProfilesNumber}]] Profiles :
                             </div>
-
                             <div th:if="${hasPrev}" class="col-md-6 mx-auto" th:align="center">
-                                    <div class="btn btn-default" >
-                                        <a  th:href="@{/more(page='prev')}" th:text="Previous" ></a>
+                                <div class="btn btn-default">
+                                    <a th:href="@{/more(page='prev')}" th:text="Previous"></a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mx-auto" th:align="center">
+                                    <div class="btn btn-default">
+                                        <a th:text="  Current   "></a>
                                     </div>
                             </div>
-                            <div class="col-md-6 mx-auto" th:align="center">
-                                <div class="btn btn-default" >
-                                    <a  th:text="  Current   " ></a>
-                                </div>
-                            </div>
                             <div th:if="${hasNext}" class="col-md-6 mx-auto" th:align="center">
-
-                                <div class="btn btn-default" >
-                                    <a  th:href="@{/more(page='next')}" th:text="Next" ></a>
-                                </div>
+                                    <div class="btn btn-default">
+                                        <a th:href="@{/more(page='next')}" th:text="Next"></a>
+                                    </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
 

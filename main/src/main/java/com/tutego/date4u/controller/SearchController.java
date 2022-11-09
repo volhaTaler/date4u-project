@@ -88,19 +88,13 @@ public class SearchController {
                 profileService.findFirstPage( filter, getOwnId(auth).get(), page);
         
         log.info("Found results: " + pageDTO.getTotalResults());
-//        if (pageDTO.getTotalResults() == 0) {
-//            model.addAttribute("filter", filter);
-//            model.addAttribute("message", "No unicorn profiles were found based on the specified parameters.");
-//            //model.addAttribute("message", "No unicorn profiles were found based on the specified parameters.");
-//            return "search";
-//        }
-        
-        
+        log.info("next " +pageDTO.nextPageExist());
+        log.info("previous: " + pageDTO.prevPageExist());
         List<ProfileFormData> listOfProfileDTO =
                 profileService.convertProfileToProfileDTO(pageDTO.getItems());
         model.addAttribute("pageOfProfiles", listOfProfileDTO);
         // required for paginated representation of results
-        model.addAttribute("currentPage", page);
+       // model.addAttribute("currentPage", page);
         model.addAttribute("hasPrev", pageDTO.prevPageExist());
         model.addAttribute("hasNext", pageDTO.nextPageExist());
         model.addAttribute("totalProfilesNumber", pageDTO.getTotalResults());
@@ -132,7 +126,8 @@ public class SearchController {
         List<ProfileFormData> listOfProfileDTO =
                 profileService.convertProfileToProfileDTO(pageDTO.getItems());
         model.addAttribute("pageOfProfiles", listOfProfileDTO);
-    
+     log.info("next " +pageDTO.nextPageExist());
+     log.info("previous: " + pageDTO.prevPageExist());
        // model.addAttribute("currentPage", page);
         model.addAttribute("hasPrev", pageDTO.prevPageExist());
         model.addAttribute("hasNext", pageDTO.nextPageExist());

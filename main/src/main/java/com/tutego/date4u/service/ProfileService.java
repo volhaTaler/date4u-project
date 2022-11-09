@@ -63,7 +63,6 @@ public class ProfileService {
     }
     
     public PageDTO findFirstPage(FilterFormData filter, long ownId, String page) {
-      //  currDTOPage.resetDisplayedResults();
         currDTOPage.resetPrevIDList();
         LocalDate maxAgeDate = LocalDate.now().minusYears(filter.getMaxAge() +1L);
         LocalDate minAgeDate = LocalDate.now().minusYears(filter.getMinAge() );
@@ -83,7 +82,6 @@ public class ProfileService {
                 
         }
         this.currDTOPage.setCurrentSearchParams(filter);
-      //  this.currDTOPage.updateDisplayedNextResults(page);
         this.currDTOPage.updateIDList(page);
         this.currDTOPage.updateTrackId();
         return this.currDTOPage;
@@ -92,7 +90,6 @@ public class ProfileService {
     public PageDTO findFurtherPage(FilterFormData filter, long ownId, String page) {
         Long nextId = this.currDTOPage.getRequiredID(page);
         this.currDTOPage.updateIDList(page);
-      //  this.currDTOPage.updateDisplayedPrevResults(page);
         LocalDate maxAgeDate = LocalDate.now().minusYears(filter.getMaxAge() +1L);
         LocalDate minAgeDate = LocalDate.now().minusYears(filter.getMinAge() );
         if (Gender.ALL.getGender() == filter.getGender()) {
@@ -104,7 +101,6 @@ public class ProfileService {
                 log.info("in function with one genders from further");
                 this.currDTOPage.setItems(profiles.findProfilesBySearchParamsAndLimit(ownId, nextId,null, filter.getMinHornlength(),
                         filter.getMaxHornlength(), minAgeDate, maxAgeDate, filter.getGender(), this.currDTOPage.getResultsPerPage()));
-          //  return currDTOPage;
         }
       //  this.currDTOPage.updateDisplayedNextResults(page);
         this.currDTOPage.updateTrackId();
