@@ -71,8 +71,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
          (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
          (:gender is null or p.gender = :gender )
          LIMIT :limit
-         """, nativeQuery = true
-    )
+         """, nativeQuery = true)
+    
     List<Profile> findProfilesBySearchParamsAndLimit(
             long ownId,
             long trackId,
