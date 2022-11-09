@@ -8,23 +8,17 @@ import java.util.List;
 public class PageDTO {
     private static final int RESULTS_PER_PAGE = 5;
     private static final String PREV_PAGE = "prev";
-    
     private final FilterFormData currentSearchFilter;
     private Long trackId;
     private final List <Long> prevTrackIds = new ArrayList<>();
     private final Integer resultsPerPage;
     private Long totalResults;
-    
-    private Long displayedResults;
     private List<Profile> items;
     
     public PageDTO() {
         this.resultsPerPage = RESULTS_PER_PAGE;
         this.items = new ArrayList<>();
         this.currentSearchFilter = new FilterFormData();
-        this.displayedResults = 0L;
-       // this.trackId = 0L;
-       // this.prevTrackIds.add(0L);
     }
     
     public void updateTrackId(){
@@ -62,7 +56,6 @@ public class PageDTO {
         this.items = items;
     }
     
-   
     public Long getTotalResults() {
         return totalResults;
     }
@@ -70,28 +63,16 @@ public class PageDTO {
         this.totalResults = totalResults;
     }
     
-    public Long getDisplayedResults() {
-        return displayedResults;
-    }
-    
-    public void setDisplayedResults(Long displayedResults) {
-        this.displayedResults = displayedResults;
-    }
-    
     public FilterFormData getCurrentSearchFilter() {
         return this.currentSearchFilter;
     }
     
     public boolean nextPageExist(){
-        
         return this.trackId != null;
-        //return this.displayedResults < this.totalResults;
     }
     
     public boolean prevPageExist(){
-        
         return this.prevTrackIds.size() > 1;
-       // return this.displayedResults > this.getResultsPerPage();
     }
     
     
@@ -115,24 +96,7 @@ public class PageDTO {
         }
         return result;
     }
-    
-    public void updateDisplayedPrevResults(String page){
-    
-        if(page.equals(PREV_PAGE)) {
-            this.setDisplayedResults(this.getDisplayedResults() - this.getItems().size());
-        }
-    }
-    public void updateDisplayedNextResults(String page){
-    
-        if(! page.equals(PREV_PAGE)) {
-            this.setDisplayedResults(this.getDisplayedResults() + this.getItems().size());
-        }
-    }
-    
-    
-    public void resetDisplayedResults(){
-    this.setDisplayedResults(0L);
-    }
+
     
     
     
