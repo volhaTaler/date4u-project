@@ -98,8 +98,9 @@
                                 <a th:href="@{/reset}"
                                    class="btn btn-info">Reset </a>
                             </div>
-                            <div class="col-md-6 mx-auto" th:align="center">
-                                <button type="submit" class="btn btn-primary">Search</button>
+                            <div class="col-md-6 mx-auto" th:align="center" th:da>
+                                <button type="submit"
+                                         class="btn btn-primary">Search</button>
 
                             </div>
                         </div>
@@ -109,8 +110,8 @@
             </div>
         </div>
 
-<!--        <form th:action="@{/search/result}" method="post">-->
-            <div style="width:90%" th:border="1" th:align="center" class="table" th:if="${totalProfilesNumber} != null">
+
+            <div style="width:90%" th:border="1" th:align="center" class="table" th:if="${totalProfilesNumber != null and totalProfilesNumber> 0}">
                 <br><br>
                 <h3>The following Unicorns match: </h3>
                 <hr>
@@ -118,9 +119,6 @@
                 <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
                 <div class="col-md-12 mx-auto" >
                     <div class="row">
-                        <div class="col-md-1 mx-auto">
-                            Nr.
-                        </div>
                         <div class="col-md-2 mx-auto">
                             <h6>Photo</h6>
                         </div>
@@ -141,14 +139,10 @@
                         </div>
                     </div>
 
-                    <div data-th-each="profile,it : ${pageOfProfiles}">
+                    <div data-th-each="profile: ${pageOfProfiles}">
                         <div class="row">
                             <input type="hidden" th:value="${profile.id}" name="id"/>
 
-                            <div class="col-md-1 mx-auto">
-                                <p data-th-text="${it.count} +(${filter.outputSize} * (${currentPage}-1))">
-                                    COUNTER</p>
-                            </div>
                             <div class="col-md-2 mx-auto" th:align="center">
                                 <img th:src="@{'/images/img/' + ${profile.profilePhoto} + '.jpg'}"
                                      style="width: 60px; height: 70px;"
@@ -182,8 +176,17 @@
                         </div>
                     </div>
                 </div>
-<!--                <span th:if="${msg != null}" th:text="${msg}"></span>-->
             </div>
+        <div th:unless="${totalProfilesNumber > 0}" class="flex-content">
+            <div class="row justify-content-around" th:align="center">
+                <img th:src="@{'/images/img/sad_unicorn.jpg'}" style="width: 50%; height: 50%;
+                padding-top: 20px; padding-bottom: 20px;"
+                     alt="No Matches Found" >
+                <br><br>
+                <h4 >No Match Found to Specified Parameters.<br> Please change parameters and Try again.   </h4>
+            </div>
+
+        </div>
              <hr>
 
             <footer style="font-size: large" class="panel-footer" th:align="center">
@@ -191,19 +194,31 @@
                 <div class="flex-content" style="width: 40%">
                     <div class="row justify-content-around">
                         <div th:if="${totalProfilesNumber > 0}" class="pagination">
+
+
                             <div class="col-md-6 mx-auto" th:align="center">
-                                Found [[${totalProfilesNumber}]] Profiles
-<!--                                : Page [[${currentPage}]] of [[${totalPages}]] :-->
+                                Found About [[${totalProfilesNumber}]] Profiles:
                             </div>
-<!--                            <div class="col-md-6 mx-auto" th:align="center">-->
-<!--                                <span th:each="i: ${pageNumbers}">-->
-<!--                                    <div class="btn btn-default">-->
-<!--                                        <a th:href="@{/search(size=${filter.outputSize}, page=${i})}" th:class="${i==currentPage}  ?' ': 'active'" >[[${i}]]</a>-->
-<!--                        &lt;!&ndash;                    [[${i}]]   th:style="${i==currentPage}  ?'background-color: #cf84d0;': 'background-color: #668;'"&ndash;&gt;-->
-<!--                                    </div>-->
-<!--                                </span>-->
-<!--                            </div>-->
+
+                            <div th:if="${hasPrev}" class="col-md-6 mx-auto" th:align="center">
+                                    <div class="btn btn-default" >
+                                        <a  th:href="@{/more(page='prev')}" th:text="Previous" ></a>
+                                    </div>
+                            </div>
+                            <div class="col-md-6 mx-auto" th:align="center">
+                                <div class="btn btn-default" >
+                                    <a  th:text="  Current   " ></a>
+                                </div>
+                            </div>
+                            <div th:if="${hasNext}" class="col-md-6 mx-auto" th:align="center">
+
+                                <div class="btn btn-default" >
+                                    <a  th:href="@{/more(page='next')}" th:text="Next" ></a>
+                                </div>
+                            </div>
                         </div>
+
+
                     </div>
                 </div>
 

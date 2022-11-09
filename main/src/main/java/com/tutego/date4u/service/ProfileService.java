@@ -8,20 +8,14 @@ import com.tutego.date4u.core.dto.ProfileFormData;
 import com.tutego.date4u.core.profile.Profile;
 import com.tutego.date4u.core.profile.ProfileRepository;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +26,7 @@ public class ProfileService {
     @Autowired
     private final ProfileRepository profiles;
     
-     private PageDTO currDTOPage;
+     private final PageDTO currDTOPage;
     
     
     
@@ -68,56 +62,53 @@ public class ProfileService {
         
     }
     
-    public PageDTO findLimitedPage(FilterFormData filter, long ownId) {
-        
-        LocalDate maxAgeDate = LocalDate.now().minusYears(filter.getMaxAge() +1);
+    public PageDTO findFirstPage(FilterFormData filter, long ownId, String page) {
+      //  currDTOPage.resetDisplayedResults();
+        currDTOPage.resetPrevIDList();
+        LocalDate maxAgeDate = LocalDate.now().minusYears(filter.getMaxAge() +1L);
         LocalDate minAgeDate = LocalDate.now().minusYears(filter.getMinAge() );
         if (Gender.ALL.getGender() == filter.getGender()) {
-            if(currDTOPage.getCurrentSearchParams() == null || !currDTOPage.getCurrentSearchParams().equals(filter)) {
                 log.info("in function with all genders");
                 this.currDTOPage.setTotalResults(profiles.countAllProfilesBySearchParams(ownId, null, filter.getMinHornlength(),
                         filter.getMaxHornlength(), minAgeDate, maxAgeDate, null));
-                log.info("count function is done: " + this.currDTOPage.getTotalResults());
                 this.currDTOPage.setItems(profiles.findFirstFiveProfilesBySearchParams(ownId, null, filter.getMinHornlength(),
                         filter.getMaxHornlength(), minAgeDate, maxAgeDate, null));
-                log.info("find  10 function is done: " + currDTOPage.getItems().size());
-                log.info("find first function is done: " + currDTOPage.getTrackId());
-                currDTOPage.setCurrentSearchParams(filter);
-            }else{
-                this.currDTOPage.setItems(profiles.findProfilesBySearchParamsAndLimit(ownId, currDTOPage.getTrackId(),null, filter.getMinHornlength(),
-                        filter.getMaxHornlength(), minAgeDate, maxAgeDate, null, currDTOPage.getResultsPerPage()));
-                log.info("find  other function is done from multi gender: " + currDTOPage.getItems().size());
-                log.info("find first function is done from find multi gender: " + currDTOPage.getTrackId());
-            }
-//            List<Profile> results =  new ArrayList<>();
-//            results.add(firstProfile);
-            
-            return currDTOPage;
-//            return this.profiles.findAllProfilesBySearchParams( ownId, null, filter.getMinHornlength(),
-//                    filter.getMaxHornlength(), minAgeDate, maxAgeDate, null);
         }else{
-            if(currDTOPage.getCurrentSearchParams() == null || !currDTOPage.getCurrentSearchParams().equals(filter)) {
                 log.info("in function with one genders");
+              
                 this.currDTOPage.setTotalResults(profiles.countAllProfilesBySearchParams(ownId, null, filter.getMinHornlength(),
                         filter.getMaxHornlength(), minAgeDate, maxAgeDate, filter.getGender()));
-                this.currDTOPage.setItems(profiles.findFirstFiveProfilesBySearchParams(ownId, null, filter.getMinHornlength(),
-                        filter.getMaxHornlength(), minAgeDate, maxAgeDate, filter.getGender()));
-                log.info("find  10 function is done: " + currDTOPage.getItems().size());
-                log.info("find first function is done: " + currDTOPage.getTrackId());
-                currDTOPage.setCurrentSearchParams(filter);
-            }else{
-                this.currDTOPage.setItems(profiles.findProfilesBySearchParamsAndLimit(ownId, currDTOPage.getTrackId(),null, filter.getMinHornlength(),
-                        filter.getMaxHornlength(), minAgeDate, maxAgeDate, filter.getGender(), currDTOPage.getResultsPerPage()));
-                log.info("find other 5 function is done from single gender: " + currDTOPage.getItems().size());
-                log.info("find other function is done from find single gender: " + currDTOPage.getTrackId());
-            }
-//            List<Profile> results =  new ArrayList<>();
-//            results.add(firstProfile);
-            return currDTOPage;
-//            return this.profiles.findAllProfilesBySearchParams( ownId, null, filter.getMinHornlength(),
-//                    filter.getMaxHornlength(), minAgeDate, maxAgeDate, filter.getGender());
+                    this.currDTOPage.setItems(profiles.findFirstFiveProfilesBySearchParams(ownId, null, filter.getMinHornlength(),
+                            filter.getMaxHornlength(), minAgeDate, maxAgeDate, filter.getGender()));
+                
         }
-        
+        this.currDTOPage.setCurrentSearchParams(filter);
+      //  this.currDTOPage.updateDisplayedNextResults(page);
+        this.currDTOPage.updateIDList(page);
+        this.currDTOPage.updateTrackId();
+        return this.currDTOPage;
+    }
+    
+    public PageDTO findFurtherPage(FilterFormData filter, long ownId, String page) {
+        Long nextId = this.currDTOPage.getRequiredID(page);
+        this.currDTOPage.updateIDList(page);
+      //  this.currDTOPage.updateDisplayedPrevResults(page);
+        LocalDate maxAgeDate = LocalDate.now().minusYears(filter.getMaxAge() +1L);
+        LocalDate minAgeDate = LocalDate.now().minusYears(filter.getMinAge() );
+        if (Gender.ALL.getGender() == filter.getGender()) {
+                log.info("in function with all genders from further");
+                this.currDTOPage.setItems(profiles.findProfilesBySearchParamsAndLimit(ownId, nextId,null, filter.getMinHornlength(),
+                        filter.getMaxHornlength(), minAgeDate, maxAgeDate, null, this.currDTOPage.getResultsPerPage()));
+                
+        }else{
+                log.info("in function with one genders from further");
+                this.currDTOPage.setItems(profiles.findProfilesBySearchParamsAndLimit(ownId, nextId,null, filter.getMinHornlength(),
+                        filter.getMaxHornlength(), minAgeDate, maxAgeDate, filter.getGender(), this.currDTOPage.getResultsPerPage()));
+          //  return currDTOPage;
+        }
+      //  this.currDTOPage.updateDisplayedNextResults(page);
+        this.currDTOPage.updateTrackId();
+        return this.currDTOPage;
     }
     
     /**

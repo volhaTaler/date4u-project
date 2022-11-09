@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 
 public interface ProfileRepository extends JpaRepository<Profile, Long>{
@@ -50,30 +49,10 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
          (p.hornlength <= :maxHornlength) and
          (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
          (:gender is null or p.gender = :gender )
-         ORDER BY p.id asc
+         
          """, nativeQuery = true
     )
     List<Profile> findFirstFiveProfilesBySearchParams(
-            long ownId,
-            String nickname,
-            int minHornlength,
-            int maxHornlength,
-            LocalDate minAgeAsDate,
-            LocalDate maxAgeAsDate,
-            Byte gender);
-    
-    @Query(value = """
-         SELECT Bottom 5 * FROM Profile as p WHERE
-         (p.id <> :ownId) and
-         (:nickname is null or p.nickname like %:nickname% ) and
-         (p.hornlength >= :minHornlength) and
-         (p.hornlength <= :maxHornlength) and
-         (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
-         (:gender is null or p.gender = :gender )
-         ORDER BY p.id asc
-         """, nativeQuery = true
-    )
-    List<Profile> findLastFiveProfilesBySearchParams(
             long ownId,
             String nickname,
             int minHornlength,
@@ -91,7 +70,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
          (p.hornlength <= :maxHornlength) and
          (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
          (:gender is null or p.gender = :gender )
-         ORDER BY p.id asc LIMIT :limit
+         LIMIT :limit
          """, nativeQuery = true
     )
     List<Profile> findProfilesBySearchParamsAndLimit(
@@ -116,8 +95,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
          (p.hornlength <= :maxHornlength) and
          (p.birthdate between :maxAgeAsDate and :minAgeAsDate ) and
          (:gender is null or p.gender = :gender )
-         """
-    )
+         """)
+    
     Page<Profile> findAllProfilesBySearchParams(
             long ownId,
             String nickname,
@@ -127,6 +106,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
             LocalDate maxAgeAsDate,
             Byte gender,
             Pageable pageable);
+    
+    
     
     @Query("SELECT p FROM Profile p LEFT JOIN FETCH p.profilesThatILike WHERE p.id = (:id)")
     public Profile findByIdAndFetchLikee(@Param("id") Long id);

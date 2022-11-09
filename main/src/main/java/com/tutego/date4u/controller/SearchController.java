@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +70,6 @@ public class SearchController {
      *
      * @param model  mvc model used to store the updated Java object and transfer it to the frontend.
      * @param filter filter contains parameters for search in DB.
-     * @param size   the number of items displayed on the page. It hardcoded. Defined in class FilterFormData: outputSize.
      * @param page   the number of current page.
      * @param auth   is required to filter out the logged-in user from the search result.
      * @return the function provides the name of the html file, which is used to render the Java data.
@@ -77,44 +77,66 @@ public class SearchController {
     @GetMapping("/search")
     public String searchPage(Model model,
                              @ModelAttribute("filter") FilterFormData filter,
-                             @RequestParam(defaultValue = "5") int size,
-                             @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(defaultValue = "next") String page,
+                             RedirectAttributes redirectAttributes,
                              Authentication auth) {
-        
         
         if (getOwnId(auth).isEmpty()) {
             return "error";
         }
-//        Page<Profile> pagesOfProfiles =
-//                profileService.findPaginated(PageRequest.of(page - 1, 5), filter, getOwnId(auth).get());
         PageDTO pageDTO =
-                profileService.findLimitedPage( filter, getOwnId(auth).get());
+                profileService.findFirstPage( filter, getOwnId(auth).get(), page);
         
-        
-        if (pageDTO.getTotalResults() == 0) {
-            model.addAttribute("filter", filter);
-            model.addAttribute("message", "No unicorn profiles were found based on the specified parameters.");
-            return "search";
-        }
-//        else if (page > totalPages) {
-//            model.addAttribute("message", "Invalid page number.");
+        log.info("Found results: " + pageDTO.getTotalResults());
+//        if (pageDTO.getTotalResults() == 0) {
+//            model.addAttribute("filter", filter);
+//            model.addAttribute("message", "No unicorn profiles were found based on the specified parameters.");
+//            //model.addAttribute("message", "No unicorn profiles were found based on the specified parameters.");
 //            return "search";
 //        }
+        
         
         List<ProfileFormData> listOfProfileDTO =
                 profileService.convertProfileToProfileDTO(pageDTO.getItems());
         model.addAttribute("pageOfProfiles", listOfProfileDTO);
         // required for paginated representation of results
         model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("hasPrev", pageDTO.prevPageExist());
+        model.addAttribute("hasNext", pageDTO.nextPageExist());
         model.addAttribute("totalProfilesNumber", pageDTO.getTotalResults());
         
-//        if (totalPages > 0) {
-//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-//                    .boxed()
-//                    .collect(Collectors.toList());
-//            model.addAttribute("pageNumbers", pageNumbers);
-//        }
+        
+        return "search";
+    }
+    
+    
+    @GetMapping("/more")
+    public String searchMore(Model model,
+                             @ModelAttribute("filter") FilterFormData filter,
+                             @RequestParam(defaultValue = "next") String page,
+                             RedirectAttributes redirectAttributes,
+                             Authentication auth) {
+        
+        if (getOwnId(auth).isEmpty()) {
+            return "error";
+        }
+        PageDTO pageDTO =
+                profileService.findFurtherPage( filter, getOwnId(auth).get(), page);
+        
+        if (!page.equals("prev") && !page.equals("next")) {
+            redirectAttributes.addFlashAttribute("message", "Invalid page navigation." +
+                    " Please use previous and next buttons.");
+            return "redirect:/search";
+        }
+        
+        List<ProfileFormData> listOfProfileDTO =
+                profileService.convertProfileToProfileDTO(pageDTO.getItems());
+        model.addAttribute("pageOfProfiles", listOfProfileDTO);
+    
+       // model.addAttribute("currentPage", page);
+        model.addAttribute("hasPrev", pageDTO.prevPageExist());
+        model.addAttribute("hasNext", pageDTO.nextPageExist());
+        model.addAttribute("totalProfilesNumber", pageDTO.getTotalResults());
         
         return "search";
     }

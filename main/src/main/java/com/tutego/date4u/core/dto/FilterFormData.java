@@ -1,28 +1,25 @@
 package com.tutego.date4u.core.dto;
 
+import java.util.Objects;
+
 /**
  * This class stores search parameters entered by user and provides them to the backend.
  */
 public class FilterFormData {
     
-    private int OUTPUT_SIZE = 5;
-    public byte DEFAULT_GENDER = (byte)Gender.ALL.getGender();
-    public final int MIN_AGE = 18;
-    public final int MAX_AGE = 99;
-    public final int MIN_HORNLEN = 0;
-    public final int MAX_HORNLEN = 50;
+    public static final byte DEFAULT_GENDER = (byte)Gender.ALL.getGender();
+    public static final int MIN_AGE = 18;
+    public static final int MAX_AGE = 99;
+    public static final int MIN_HORNLEN = 0;
+    public static final int MAX_HORNLEN = 50;
     private byte gender;
-    
-    private int outputSize;
-    
     private int attractedToGender;
-    
     private int minAge;
-    
     private int maxAge;
-    
     private int minHornlength;
     private int maxHornlength;
+    
+    private boolean searchStatus;
     
     
     public FilterFormData(){
@@ -31,8 +28,15 @@ public class FilterFormData {
         this.maxAge = MAX_AGE;
         this.minHornlength = MIN_HORNLEN;
         this.maxHornlength = MAX_HORNLEN;
-        this.outputSize = OUTPUT_SIZE;
+        
+    }
     
+    public boolean isSearchStatus() {
+        return searchStatus;
+    }
+    
+    public void setSearchStatus(boolean searchStatus) {
+        this.searchStatus = searchStatus;
     }
     
     public byte getGender() {
@@ -75,13 +79,6 @@ public class FilterFormData {
         this.maxHornlength = maxHornlength;
     }
     
-    public int getOutputSize() {
-        return outputSize;
-    }
-    
-    public void setOutputSize(int outputSize) {
-        this.outputSize = outputSize;
-    }
     
     public int getAttractedToGender() {
         return attractedToGender;
@@ -89,5 +86,23 @@ public class FilterFormData {
     
     public void setAttractedToGender(int attractedToGender) {
         this.attractedToGender = attractedToGender;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        FilterFormData that = (FilterFormData) o;
+        return gender == that.gender && attractedToGender == that.attractedToGender &&
+                minAge == that.minAge && maxAge == that.maxAge && minHornlength == that.minHornlength &&
+                maxHornlength == that.maxHornlength;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(gender, attractedToGender, minAge, maxAge, minHornlength, maxHornlength);
     }
 }
